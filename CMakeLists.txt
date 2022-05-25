@@ -5,7 +5,10 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lreadline")
 
 include_directories(libft/includes
-        includes)
+        includes
+        /opt/homebrew/Cellar/readline/8.1.2/include)
+
+link_directories(/opt/homebrew/Cellar/readline/8.1.2/lib)
 
 add_executable(minishell
         libft/includes/libft.h
