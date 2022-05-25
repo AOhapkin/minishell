@@ -64,4 +64,5 @@
 
 - [x] Запускается с помощью `CMake` и показывает `prompt`.
     - [x] Сконфигурировал `CMake` файл чтобы запускалось с библиотекой `readline`
+      - [инструкция](https://youtrack.jetbrains.com/issue/CPP-12828/CMake-Readline-Support)
     - [x] Минимальный `.h` и `main.c`
