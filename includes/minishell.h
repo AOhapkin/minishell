@@ -66,6 +66,7 @@ int lexer(char *buffer);
 char *parse_lexeme_with_quote(char **value, char *buffer);
 char *parse_lexeme_without_quote(char **value, char *buffer);
 char *add_environment_value(char **value, char *buffer);
+int is_valid_for_env_var_name(char env_var_name_char);
 
 t_token *new_token(char *first_char);
 int get_size(t_token *head);

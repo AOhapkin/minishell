@@ -54,7 +54,7 @@ char *parse_lexeme_with_quote(char **value, char *buffer)
 	buffer++;
 	while (buffer && *buffer && *buffer != quote)
 	{
-		if (*buffer == ENV_CHAR)
+		if (*buffer == ENV_CHAR && is_valid_for_env_var_name(*(buffer + 1)))
 		{
 			if (to > from)
 				*value = join_and_free_srcs(*value, ft_substr(from, 0, to - from));

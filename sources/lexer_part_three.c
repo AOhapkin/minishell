@@ -1,5 +1,14 @@
 #include "minishell.h"
 
+/**
+ * TODO узнать подробнее какие бывают ограничения на имена переменных
+ * для bash shell
+ */
+int is_valid_for_env_var_name(char env_var_name_char)
+{
+	return ft_isalpha(env_var_name_char) || ft_isdigit(env_var_name_char) || env_var_name_char == '_';
+}
+
 char *join_and_free_srcs(char *s1, char *s2)
 {
 	char *result;
@@ -20,7 +29,7 @@ char *join_and_free_srcs(char *s1, char *s2)
 char *add_environment_value(char **value, char *buffer)
 {
 	*value = join_and_free_srcs(*value, ft_strdup("ENV_VALUE"));
-	while (buffer && *buffer && (ft_isalpha(*buffer) || ft_isdigit(*buffer)))
+	while (buffer && is_valid_for_env_var_name(*buffer))
 		buffer++;
 	return buffer;
 }
