@@ -63,15 +63,13 @@ t_token *get_new_token(char **buffer)
 int lexer(char *buffer)
 {
 	t_token *first_token;
-	t_token *new_token;
 
 	first_token = NULL;
 	while (*buffer)
 	{
 		while (ft_isspace(*buffer))
 			buffer++;
-		new_token = get_new_token(&buffer);
-		push_token_back(&first_token, new_token);
+		push_token_back(&first_token, get_new_token(&buffer));
 	}
 	return 1;
 }

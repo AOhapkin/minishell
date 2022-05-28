@@ -4,7 +4,7 @@ t_token *new_token(char *first_char)
 {
 	t_token *new;
 
-	new = ft_memalloc(sizeof(new));
+	new = ft_memalloc(sizeof(t_token));
 	if (new)
 	{
 		new->first_char = first_char;
@@ -12,7 +12,9 @@ t_token *new_token(char *first_char)
 		new->next = NULL;
 		return (new);
 	}
-	return (NULL);
+//	return (NULL);
+	perror("memalloc problem");
+	exit(1);
 }
 
 int get_size(t_token *head)
