@@ -8,3 +8,13 @@ int main(int argc, char **argv, char **envp)
 	while_true();
 	return 0;
 }
+
+//int main(int argc, char **argv)
+//{
+//	char *s = "hello world";
+//	char *from = s;
+//	char *to = s;
+//
+//	printf("|%s|\n", ft_substr(from, 0, to - from));
+//	return 0;
+//}

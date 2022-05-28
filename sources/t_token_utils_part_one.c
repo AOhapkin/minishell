@@ -1,20 +1,13 @@
 #include "minishell.h"
 
-t_token *new_token(char *first_char)
+t_token *new_token(char *value)
 {
 	t_token *new;
 
 	new = ft_memalloc(sizeof(t_token));
 	if (new)
-	{
-		new->first_char = first_char;
-		new->last_char = first_char;
-		new->next = NULL;
-		return (new);
-	}
-//	return (NULL);
-	perror("memalloc problem");
-	exit(1);
+		new->value = value;
+	return (new);
 }
 
 int get_size(t_token *head)

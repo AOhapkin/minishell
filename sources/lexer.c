@@ -1,59 +1,21 @@
 #include "minishell.h"
 
 /**
- * Парсит конец токена который начинается с кавычки.
- */
-char *parse_quot_first(t_token *token, char *buffer)
-{
-	char quote_char;
-
-	quote_char = *buffer;
-	if (!*buffer && quote_char != DOUBLE_QUOTE && quote_char != SINGLE_QUOTE)
-		exit(1);
-	buffer++;
-	// до следующей кавычки или конца буфера
-	while (*buffer && *buffer != quote_char)
-		buffer++;
-	token->last_char = buffer;
-	if (*buffer)
-		buffer++;
-	return buffer;
-}
-
-/**
- * Парсит конец токена который не начинается с кавычки.
- */
-char *parse_no_quote_first(t_token *token, char *buffer)
-{
-	if (!*buffer && *buffer == DOUBLE_QUOTE && *buffer == SINGLE_QUOTE)
-		exit(1);
-	// до пробела кавычки или конца буфера
-	while (*buffer && !ft_isspace(*buffer) && !ft_strchr(QUOTES, *buffer))
-	{
-		token->last_char = buffer;
-		buffer++;
-	}
-	if (!*buffer)
-		token->last_char = buffer;
-	return buffer;
-}
-
-/**
- * Делит входной буфер на "слова".
+ * Делит входной буфер на "токены"
  */
 t_token *get_new_token(char **buffer)
 {
-	t_token *token;
+	char *value;
 
-	token = new_token(*buffer);
+	value = NULL;
 	while (**buffer && !ft_isspace(**buffer))
 	{
 		if (ft_strchr(QUOTES, **buffer))
-			*buffer = parse_quot_first(token, *buffer);
+			*buffer = parse_lexeme_with_quote(&value, *buffer);
 		else
-			*buffer = parse_no_quote_first(token, *buffer);
+			*buffer = parse_lexeme_without_quote(&value, *buffer);
 	}
-	return token;
+	return new_token(value);
 }
 
 /**
@@ -71,5 +33,6 @@ int lexer(char *buffer)
 			buffer++;
 		push_token_back(&first_token, get_new_token(&buffer));
 	}
+	printf("%s\n", first_token->value);
 	return 1;
 }

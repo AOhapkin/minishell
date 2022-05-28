@@ -17,7 +17,7 @@
 # define DOUBLE_QUOTE '\"'
 # define SINGLE_QUOTE '\''
 # define QUOTES "\'\""
-# define NOT_INTERPRET_CHARS "\\;"
+# define NOT_INTERPRET_CHARS "\\;$"
 
 /**
  * Three token types
@@ -42,7 +42,7 @@
 /**
  * OPERATORs
  */
-# define EXECUTE "/"
+# define EXECUTE "./"
 
 /**
  * Three token types
@@ -51,11 +51,11 @@
 # define ARGUMENT 'a'
 # define FLAG 'f'
 # define OPERATOR 'o' // <,>,<<,>>,|,/
+# define ENV_CHAR '$'
 
 typedef struct s_token
 {
-	char *first_char;
-	char *last_char;
+	char *value;
 	char type;
 	struct s_token *next;
 } t_token;
@@ -63,6 +63,9 @@ typedef struct s_token
 void while_true(void);
 
 int lexer(char *buffer);
+char *parse_lexeme_with_quote(char **value, char *buffer);
+char *parse_lexeme_without_quote(char **value, char *buffer);
+char *add_environment_value(char **value, char *buffer);
 
 t_token *new_token(char *first_char);
 int get_size(t_token *head);
@@ -72,5 +75,7 @@ t_token *pull_first_token(t_token **stack);
 void push_token_back(t_token **stack, t_token *token);
 void push_token_front(t_token **stack, t_token *token);
 int get_position_in_the_stack(t_token *stack, t_token *token);
+
+char *join_and_free_srcs(char *s1, char *s2);
 
 #endif
