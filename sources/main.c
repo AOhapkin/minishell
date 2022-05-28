@@ -3,8 +3,8 @@
 int main(int argc, char **argv, char **envp)
 {
 
-    char	*line;
+	char *line;
 
-    line = readline(PROMPT);
-    return 0;
+	while_true();
+	return 0;
 }

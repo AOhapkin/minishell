@@ -59,4 +59,8 @@ add_executable(minishell
         libft/sources/ft_substr.c
         libft/sources/ft_tolower.c
         libft/sources/ft_toupper.c
+        sources/while_true.c
+        sources/t_token_utils_part_one.c
+        sources/t_token_utils_part_two.c
+        sources/lexer.c
         sources/main.c)
