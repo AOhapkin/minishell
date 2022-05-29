@@ -47,14 +47,19 @@ char *parse_lexeme_with_quote(char **value, char *buffer)
 	}
 	quote = *buffer;
 	if (!ft_strchr(buffer + 1, quote))
-		from = buffer;
+	{
+		*value = join_and_free_srcs(*value, ft_substr(buffer, 0, 1));
+		return (buffer + 1);
+	}
 	else
 		from = buffer + 1;
 	to = from;
 	buffer++;
 	while (buffer && *buffer && *buffer != quote)
 	{
-		if (*buffer == ENV_CHAR && is_valid_for_env_var_name(*(buffer + 1)))
+		if (*buffer == ENV_CHAR
+			&& quote == DOUBLE_QUOTE
+			&& is_valid_for_env_var_name(*(buffer + 1)))
 		{
 			if (to > from)
 				*value = join_and_free_srcs(*value, ft_substr(from, 0, to - from));

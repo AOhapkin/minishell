@@ -33,6 +33,14 @@ int lexer(char *buffer)
 			buffer++;
 		push_token_back(&first_token, get_new_token(&buffer));
 	}
-	printf("%s\n", first_token->value);
+
+
+	while (first_token)
+	{
+		printf("minishell > %s\n", first_token->value);
+		first_token = first_token->next;
+	}
+
+
 	return 1;
 }
