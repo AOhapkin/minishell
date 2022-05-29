@@ -12,7 +12,6 @@ char *parse_lexeme_without_quote(char **value, char *buffer)
 	}
 	from = buffer;
 	to = from;
-	buffer++;
 	while (buffer && *buffer && !ft_strchr(QUOTES, *buffer) && !ft_isspace(*buffer))
 	{
 		if (*buffer == ENV_CHAR)
@@ -62,6 +61,8 @@ char *parse_lexeme_with_quote(char **value, char *buffer)
 			&& is_valid_for_env_var_name(*(buffer + 1)))
 		{
 			if (to > from)
+				*value = join_and_free_srcs(*value, ft_substr(from, 0, to - from));
+			else
 				*value = join_and_free_srcs(*value, ft_substr(from, 0, to - from));
 			buffer = add_environment_value(value, ++buffer);
 			from = buffer;

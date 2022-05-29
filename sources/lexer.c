@@ -15,6 +15,8 @@ t_token *get_new_token(char **buffer)
 		else
 			*buffer = parse_lexeme_without_quote(&value, *buffer);
 	}
+	if (!value)
+		value = ft_strdup("");
 	return new_token(value);
 }
 
@@ -31,7 +33,8 @@ int lexer(char *buffer)
 	{
 		while (ft_isspace(*buffer))
 			buffer++;
-		push_token_back(&first_token, get_new_token(&buffer));
+		if (*buffer)
+			push_token_back(&first_token, get_new_token(&buffer));
 	}
 
 
