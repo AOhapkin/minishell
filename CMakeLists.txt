@@ -65,5 +65,4 @@ add_executable(minishell
         sources/lexer.c
         sources/lexer_part_two.c
         sources/lexer_part_three.c
-        sources/main.c
-        sources/echo.c)
+        sources/main.c)
