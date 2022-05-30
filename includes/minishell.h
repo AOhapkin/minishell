@@ -53,10 +53,15 @@
 # define OPERATOR 'o' // <,>,<<,>>,|,/
 # define ENV_CHAR '$'
 
+# define FINAL 1
+# define NOT_FINAL 0
+# define SKIP -1
+
 typedef struct s_lexer
 {
-	char *start;
-	char *finish;
+	size_t from;
+	size_t to;
+	char *value;
 	char quote;
 } 				t_lexer;
 
@@ -67,10 +72,18 @@ typedef struct s_token
 	struct s_token *next;
 }				t_token;
 
-void while_true(void);
+typedef struct s_base
+{
+	char *buffer;
+	t_token *tokens;
+	size_t i;
+} 				t_base;
 
-int lexer(char *buffer);
-t_token *get_new_token(char **buffer);
+void while_true(void);
+char *get_input(char *previous_input);
+
+char *lexer(char *buffer);
+t_token *get_new_token(t_base *base);
 int is_valid_char_for_env_var_name(char env_var_name_char);
 
 t_token *new_token(char *first_char);

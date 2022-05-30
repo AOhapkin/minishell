@@ -17,20 +17,21 @@ void print_all_tokens(t_token *token)
  * Принимает строку из prompt
  * делит ее на токены и печатает.
  */
-int lexer(char *buffer)
+char *lexer(char *buffer)
 {
-	t_token *first_token;
+	t_base base;
 
-	first_token = NULL;
-	while (*buffer)
+	ft_bzero(&base, sizeof(t_base));
+	base.buffer = buffer;
+	while (base.buffer[base.i])
 	{
-		while (ft_isspace(*buffer))
-			buffer++;
-		if (*buffer)
-			push_token_back(&first_token, get_new_token(&buffer));
+		while (ft_isspace(base.buffer[base.i]))
+			base.i++;
+		if (base.buffer[base.i])
+			push_token_back(&(base.tokens), get_new_token(&base));
 	}
 
-	print_all_tokens(first_token);
-	free_list_of_tokens(first_token);
-	return 1;
+	print_all_tokens(base.tokens);
+	free_list_of_tokens(base.tokens);
+	return base.buffer;
 }
