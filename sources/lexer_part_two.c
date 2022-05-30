@@ -31,6 +31,7 @@ void update_lexer(t_lexer *lexer, char quote)
 /**
  * Добавляет к value значение переменной,
  * инкремент buffer чтобы пропустить имя переменной.
+ * TODO ПОМЕЯТЬ НА НОРМАЛЬНЫЙ ОТДЕЛЬНОЙ ЗАДАЧЕЙ
  */
 void add_env(t_lexer *lexer)
 {
@@ -78,9 +79,7 @@ int handle_env_char(t_lexer *lexer)
 		&& (is_valid_char_for_env_var_name(*lexer->buffer)))
 	{
 		update_lexer(lexer, lexer->quote);
-
 		add_env(lexer);
-
 		lexer->from = lexer->buffer;
 		lexer->to = lexer->buffer;
 		return NOT_SKIP;
