@@ -26,9 +26,6 @@ int handle_open_quotes(t_base *base, t_lexer *lexer)
 {
 	if (!lexer->quote && ft_strchr(QUOTES, base->buffer[base->i]))
 	{
-		while (!ft_strchr(&(base->buffer[base->i + 1]), base->buffer[base->i]))
-			base->buffer = read_from_input_and_join_with_previous(base->buffer);
-
 		lexer->value = join_value_and_free_srcs(base, lexer);
 		init_lexer(lexer, base->i + 1, base->buffer[base->i], lexer->value);
 		base->i++;
@@ -47,9 +44,9 @@ int handle_close_quotes(t_base *base, t_lexer *lexer)
 	{
 		lexer->value = join_value_and_free_srcs(base, lexer);
 		base->i++;
+		init_lexer(lexer, base->i, 0, lexer->value);
 		if (!(base->buffer[base->i] && !ft_isspace(base->buffer[base->i])))
 			return FINAL;
-		init_lexer(lexer, base->i, 0, lexer->value);
 		return NOT_FINAL;
 	}
 	else
