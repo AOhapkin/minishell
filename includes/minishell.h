@@ -80,7 +80,8 @@ typedef struct s_base
 } 				t_base;
 
 void while_true(void);
-char *get_input(char *previous_input);
+char *read_from_input();
+char *read_from_input_and_join_with_previous(char *prev);
 
 char *lexer(char *buffer);
 t_token *get_new_token(t_base *base);
