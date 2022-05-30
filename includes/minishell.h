@@ -53,14 +53,14 @@
 # define OPERATOR 'o' // <,>,<<,>>,|,/
 # define ENV_CHAR '$'
 
-# define FINAL 1
-# define NOT_FINAL 0
-# define SKIP -1
+# define SKIP 1
+# define NOT_SKIP 0
 
 typedef struct s_lexer
 {
-	size_t from;
-	size_t to;
+	char *buffer;
+	char *from;
+	char *to;
 	char *value;
 	char quote;
 } 				t_lexer;
@@ -84,7 +84,7 @@ char *read_from_input();
 char *read_from_input_and_join_with_previous(char *prev);
 
 char *lexer(char *buffer);
-t_token *get_new_token(t_base *base);
+t_token *get_new_token(char **buffer);
 int is_valid_char_for_env_var_name(char env_var_name_char);
 
 t_token *new_token(char *first_char);

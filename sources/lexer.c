@@ -8,7 +8,7 @@ void print_all_tokens(t_token *token)
 	t_token *current = token;
 	while (current)
 	{
-		printf("%s\n", current->value);
+		printf("|%s|\n", current->value);
 		current = current->next;
 	}
 }
@@ -19,19 +19,18 @@ void print_all_tokens(t_token *token)
  */
 char *lexer(char *buffer)
 {
-	t_base base;
+	t_token *tokens;
 
-	ft_bzero(&base, sizeof(t_base));
-	base.buffer = buffer;
-	while (base.buffer[base.i])
+	tokens = NULL;
+	while (*buffer)
 	{
-		while (ft_isspace(base.buffer[base.i]))
-			base.i++;
-		if (base.buffer[base.i])
-			push_token_back(&(base.tokens), get_new_token(&base));
+		while (ft_isspace(*buffer))
+			buffer++;
+		if (*buffer)
+			push_token_back(&tokens, get_new_token(&buffer));
 	}
 
-	print_all_tokens(base.tokens);
-	free_list_of_tokens(base.tokens);
-	return base.buffer;
+	print_all_tokens(tokens);
+	free_list_of_tokens(tokens);
+	return NULL;
 }

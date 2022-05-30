@@ -53,7 +53,7 @@ void while_true(void)
 	{
 		buffer = read_from_input();
 
-		buffer = lexer(buffer);
+		lexer(buffer);
 		if (status == 666)
 			break;
 		free(buffer);

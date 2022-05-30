@@ -3,33 +3,52 @@
 /**
  * Заполнение вспомогательной структуры
  */
-void init_lexer(t_lexer *lexer, size_t current_index, char quote, char *value)
+void init_lexer(t_lexer *lexer, char *buffer)
 {
 	ft_bzero(lexer, sizeof(t_lexer));
-	lexer->from = current_index;
-	lexer->to = current_index;
-	lexer->quote = quote;
-	lexer->value = value;
+	lexer->from = buffer;
+	lexer->to = buffer;
+	lexer->buffer = buffer;
 }
 
-char *join_value_and_free_srcs(t_base *base, t_lexer *lexer)
+/**
+ * Обновляет value накопившейся подстрокой от from до to,
+ * обновляет quote,
+ * инкремент buffer,
+ * from и to заполняет новым buffer.
+ */
+void update_lexer(t_lexer *lexer, char quote)
 {
-	return join_and_free_srcs(lexer->value,
-						ft_substr(base->buffer + lexer->from,
-										0, lexer->to - lexer->from));
+	lexer->value = join_and_free_srcs(lexer->value,
+									  ft_substr(lexer->from,
+												0, lexer->to - lexer->from));
+	lexer->quote = quote;
+	lexer->buffer++;
+	lexer->from = lexer->buffer;
+	lexer->to = lexer->buffer;
+}
+
+/**
+ * Добавляет к value значение переменной,
+ * инкремент buffer чтобы пропустить имя переменной.
+ */
+void add_env(t_lexer *lexer)
+{
+	lexer->buffer++;
+	lexer->value = join_and_free_srcs(lexer->value, ft_strdup("ENV_VALUE"));
+	while (*lexer->buffer && is_valid_char_for_env_var_name(*lexer->buffer))
+		lexer->buffer++;
 }
 
 /**
  * Открывающая кавычка " или '
  */
-int handle_open_quotes(t_base *base, t_lexer *lexer)
+int handle_open_quotes(t_lexer *lexer)
 {
-	if (!lexer->quote && ft_strchr(QUOTES, base->buffer[base->i]))
+	if (!lexer->quote && ft_strchr(QUOTES, *lexer->buffer))
 	{
-		lexer->value = join_value_and_free_srcs(base, lexer);
-		init_lexer(lexer, base->i + 1, base->buffer[base->i], lexer->value);
-		base->i++;
-		return NOT_FINAL;
+		update_lexer(lexer, *lexer->buffer);
+		return NOT_SKIP;
 	}
 	else
 		return SKIP;
@@ -38,16 +57,12 @@ int handle_open_quotes(t_base *base, t_lexer *lexer)
 /**
  * Закрывающая кавычка " или '
  */
-int handle_close_quotes(t_base *base, t_lexer *lexer)
+int handle_close_quotes(t_lexer *lexer)
 {
-	if (lexer->quote && base->buffer[base->i] == lexer->quote)
+	if (lexer->quote && *lexer->buffer == lexer->quote)
 	{
-		lexer->value = join_value_and_free_srcs(base, lexer);
-		base->i++;
-		init_lexer(lexer, base->i, 0, lexer->value);
-		if (!(base->buffer[base->i] && !ft_isspace(base->buffer[base->i])))
-			return FINAL;
-		return NOT_FINAL;
+		update_lexer(lexer, 0);
+		return NOT_SKIP;
 	}
 	else
 		return SKIP;
@@ -56,63 +71,56 @@ int handle_close_quotes(t_base *base, t_lexer *lexer)
 /**
  * Обработка символа $
  */
-int handle_env_char(t_base *base, t_lexer *lexer)
+int handle_env_char(t_lexer *lexer)
 {
-	if (base->buffer[base->i] == ENV_CHAR
+	if (*lexer->buffer == ENV_CHAR
 		&& (!lexer->quote || lexer->quote == DOUBLE_QUOTE)
-		&& (is_valid_char_for_env_var_name(base->buffer[base->i + 1])
-			|| ft_strchr(QUOTES, base->buffer[base->i])))
+		&& (is_valid_char_for_env_var_name(*lexer->buffer)))
 	{
-		lexer->value = join_value_and_free_srcs(base, lexer);
-		base->i++;
+		update_lexer(lexer, lexer->quote);
 
+		add_env(lexer);
 
-		lexer->value = join_and_free_srcs(lexer->value, ft_strdup("ENV_VALUE"));
-
-
-		while (base->buffer[base->i] && is_valid_char_for_env_var_name(base->buffer[base->i]))
-			base->i++;
-		if (!(base->buffer[base->i] && !ft_isspace(base->buffer[base->i])))
-			return FINAL;
-		init_lexer(lexer, base->i, lexer->quote, lexer->value);
-		return NOT_FINAL;
+		lexer->from = lexer->buffer;
+		lexer->to = lexer->buffer;
+		return NOT_SKIP;
 	}
 	else
 		return SKIP;
 }
 
-int handle_simple_char(t_base *base, t_lexer *lexer)
+int handle_simple_char(t_lexer *lexer)
 {
-	base->i++;
-	lexer->to = base->i;
-	if (!(base->buffer[base->i]) || (ft_isspace(base->buffer[base->i]) && !lexer->quote))
+	lexer->buffer++;
+	lexer->to = lexer->buffer;
+	if (!*lexer->buffer ||
+		(ft_isspace(*lexer->buffer) && !lexer->quote))
 	{
-		lexer->value = join_value_and_free_srcs(base, lexer);
-		return FINAL;
+		update_lexer(lexer, 0);
 	}
-	return NOT_FINAL;
+	return NOT_SKIP;
 }
 
 /**
  * Откусывает от буфера один токен.
  */
-t_token *get_new_token(t_base *base)
+t_token *get_new_token(char **buffer)
 {
 	t_lexer lexer;
-	int (*p[4]) (t_base *base, t_lexer *lexer);
+	int (*p[4])(t_lexer *lexer);
 	size_t i;
 
-	init_lexer(&lexer, base->i, 0, NULL);
+	init_lexer(&lexer, *buffer);
 	p[0] = handle_open_quotes;
 	p[1] = handle_close_quotes;
 	p[2] = handle_env_char;
 	p[3] = handle_simple_char;
-	while (base->buffer[base->i]
-	&& (!ft_isspace(base->buffer[base->i]) || lexer.quote))
+	while (*lexer.buffer && (lexer.quote || !ft_isspace(*lexer.buffer)))
 	{
 		i = 0;
-		while (p[i](base, &lexer) == SKIP && i < 4)
+		while (p[i](&lexer) == SKIP && i < 4)
 			i++;
 	}
+	*buffer = lexer.buffer;
 	return new_token(lexer.value);
 }
