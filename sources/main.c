@@ -12,10 +12,18 @@ int main(int argc, char **argv, char **envp)
 
 //int main(int argc, char **argv)
 //{
-//	char *s = "hello world";
-//	char *from = s;
-//	char *to = s;
+//	char *buffer;
+//	int i = 1;
 //
-//	printf("|%s|\n", ft_substr(from, 0, to - from));
+//	printf("Количество аргументов = %i\n", argc - 1);
+//	while (i < (argc - 1))
+//	{
+//		printf("- аргумент %i = '%s'\n", i, argv[i]);
+//		i++;
+//	}
+//
+//	buffer = readline(PROMPT);
+//	printf("Из RPOMPT достал '%s'\n", buffer);
+//	free(buffer);
 //	return 0;
 //}
