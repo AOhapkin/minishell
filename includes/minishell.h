@@ -5,8 +5,9 @@
 # include <unistd.h>
 # include <stdio.h>
 # include "libft.h"
-#include <readline/history.h>
-#include <readline/readline.h>
+# include <termios.h>
+# include <readline/history.h>
+# include <readline/readline.h>
 
 # define PROMPT "minishell > "
 
@@ -30,7 +31,8 @@
 /**
  * COMMANDs and FLAGSs
  */
-# define ECHO "echo"
+
+//# define ECHO "echo"
 # define ECHO_N_FLAG "-n" // no '\n' at the end
 # define CD "cd" // with relative or absolute path
 # define PWD "pwd" // with no options
