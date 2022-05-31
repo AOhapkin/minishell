@@ -96,6 +96,9 @@ int handle_simple_char(t_lexer *lexer)
 		(ft_isspace(*lexer->buffer) && !lexer->quote))
 	{
 		update_lexer(lexer, 0);
+		lexer->buffer--;
+		lexer->from--;
+		lexer->to--;
 	}
 	return NOT_SKIP;
 }
@@ -113,7 +116,7 @@ t_token *get_new_token(char **buffer)
 	p[0] = handle_open_quotes;
 	p[1] = handle_close_quotes;
 	p[2] = handle_env_char;
-	p[3] = handle_simple_char;
+	p[3] = handle_simple_char;1
 	while (*lexer.buffer && (lexer.quote || !ft_isspace(*lexer.buffer)))
 	{
 		i = 0;

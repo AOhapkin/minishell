@@ -26,6 +26,7 @@
 # define ARGUMENT 'a'
 # define FLAG 'f'
 # define OPERATOR 'o' // <,>,<<,>>,|
+# define REDIRECTIONS_CHARS "<>|"
 
 /**
  * COMMANDs and FLAGSs
