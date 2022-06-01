@@ -57,36 +57,12 @@
 # define SKIP 1
 # define NOT_SKIP 0
 
-typedef struct s_lexer
-{
-	char *buffer;
-	char *from;
-	char *to;
-	char *value;
-	char quote;
-} 				t_lexer;
-
 typedef struct s_token
 {
 	char *value;
 	char type;
 	struct s_token *next;
 }				t_token;
-
-typedef struct s_base
-{
-	char *buffer;
-	t_token *tokens;
-	size_t i;
-} 				t_base;
-
-void while_true(void);
-char *read_from_input();
-char *read_from_input_and_join_with_previous(char *prev);
-
-char *lexer(char *buffer);
-t_token *get_new_token(char **buffer);
-int is_valid_char_for_env_var_name(char env_var_name_char);
 
 t_token *new_token(char *first_char);
 int get_size(t_token *head);
@@ -96,7 +72,40 @@ t_token *pull_first_token(t_token **stack);
 void push_token_back(t_token **stack, t_token *token);
 void push_token_front(t_token **stack, t_token *token);
 int get_position_in_the_stack(t_token *stack, t_token *token);
+void print_all_tokens(t_token *token);
 
+typedef struct s_lexer
+{
+	char *buffer;
+	char *from;
+	char *value;
+	char quote;
+	t_token *tokens;
+} 				t_lexer;
+
+t_token *lexer(char *buffer);
+void lexer_init(t_lexer *lexer, char *buffer);
+void lexer_update_value_and_quote(t_lexer *lexer, char quote);
+void lexer_add_token(t_lexer *lexer);
+void lexer_add_env_to_value_and_skip_name(t_lexer *lexer);
+// handlers
+int handle_quotes(t_lexer *lexer);
+int handle_env_char(t_lexer *lexer);
+int handle_redirect(t_lexer *lexer);
+int handle_spaces(t_lexer *lexer);
+int handle_simple_char(t_lexer *lexer);
+int is_valid_char_for_env_var_name(char env_var_name_char);
 char *join_and_free_srcs(char *s1, char *s2);
+
+typedef struct s_base
+{
+	t_token *command;
+	t_token *input;
+	t_token *output;
+} 				t_base;
+
+void while_true(void);
+char *read_from_input();
+char *read_from_input_and_join_with_previous(char *prev);
 
 #endif

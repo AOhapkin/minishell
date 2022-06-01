@@ -46,16 +46,16 @@ char *read_from_input()
 void while_true(void)
 {
 	char *buffer;
-	int status;
+	t_token *tokens;
 
+	tokens = NULL;
 	buffer = NULL;
 	while (TRUE)
 	{
 		buffer = read_from_input();
-
-		lexer(buffer);
-		if (status == 666)
-			break;
+		tokens = lexer(buffer);
+		print_all_tokens(tokens);
+		free_list_of_tokens(tokens);
 		free(buffer);
 	}
 }
