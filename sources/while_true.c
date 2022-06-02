@@ -54,6 +54,7 @@ void while_true(void)
 	{
 		buffer = read_from_input();
 		tokens = lexer(buffer);
+		expand_tokens(tokens);
 		print_all_tokens(tokens);
 		free_list_of_tokens(tokens);
 		free(buffer);

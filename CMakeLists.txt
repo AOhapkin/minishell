@@ -64,5 +64,6 @@ add_executable(minishell
         sources/t_token_utils_part_two.c
         sources/lexer.c
         sources/lexer_handlers.c
+        sources/expander.c
         sources/t_lexer_utils.c
         sources/main.c)

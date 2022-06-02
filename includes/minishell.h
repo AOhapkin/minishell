@@ -4,58 +4,52 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
-# include "libft.h"
 #include <readline/history.h>
 #include <readline/readline.h>
+# include "libft.h"
 
 # define PROMPT "minishell > "
 
 # define TRUE 1
 # define FALSE 0
 
-# define WHITESPACE_CHARS " \t\r\v\f\n"
 # define DOUBLE_QUOTE '\"'
 # define SINGLE_QUOTE '\''
 # define QUOTES "\'\""
-# define NOT_INTERPRET_CHARS "\\;$"
-
-/**
- * Three token types
- */
-# define COMMAND 'c' //ex
-# define ARGUMENT 'a'
-# define FLAG 'f'
-# define OPERATOR 'o' // <,>,<<,>>,|
 # define REDIRECTIONS_CHARS "<>|"
-
-/**
- * COMMANDs and FLAGSs
- */
-# define ECHO "echo"
-# define ECHO_N_FLAG "-n" // no '\n' at the end
-# define CD "cd" // with relative or absolute path
-# define PWD "pwd" // with no options
-# define EXPORT "export" // with no options
-# define UNSET "unset" // with no options
-# define ENV "env" // with no options or arguments
-# define EXIT "exit" // with no options
-
-/**
- * OPERATORs
- */
-# define EXECUTE "./"
-
-/**
- * Three token types
- */
-# define COMMAND 'c' //ex
-# define ARGUMENT 'a'
-# define FLAG 'f'
-# define OPERATOR 'o' // <,>,<<,>>,|,/
 # define ENV_CHAR '$'
 
+/**
+ * Handler statuses
+ */
 # define SKIP 1
 # define NOT_SKIP 0
+
+/**
+ * Commands
+ */
+# define ECHO_TYPE 1
+# define EXEC_TYPE 2
+# define NUM_OF_COMMANDS 2
+
+/**
+ * Flags
+ */
+# define ECHO_N_FLAG 21
+
+/**
+ * Args
+ */
+# define COMMAND_ARG_TYPE -1
+# define REDIRECT_ARG_TYPE -2
+
+/**
+ * Redirections
+ */
+# define REDIRECT_OUTPUT 31 // >
+# define APPENDING_REDIRECTED_OUTPUT 32 // >>
+# define REDIRECT_INPUT 33 // <
+# define HERE_DOCUMENTS 34 // <<
 
 typedef struct s_token
 {
@@ -96,12 +90,15 @@ int handle_spaces(t_lexer *lexer);
 int handle_simple_char(t_lexer *lexer);
 int is_valid_char_for_env_var_name(char env_var_name_char);
 char *join_and_free_srcs(char *s1, char *s2);
+void expand_tokens(t_token *token);
 
 typedef struct s_base
 {
 	t_token *command;
 	t_token *input;
 	t_token *output;
+	int contain_args;
+	int contain_flag;
 } 				t_base;
 
 void while_true(void);
