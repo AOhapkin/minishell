@@ -44,6 +44,7 @@ int is_all_quotes_close(char *input)
 char *read_from_input()
 {
 	char	*input;
+
 	input = readline(PROMPT);
 	while (!is_all_quotes_close(input))
 		input = read_from_input_and_join_with_previous(input);
@@ -62,8 +63,9 @@ void	setup_terminal(void) {
 void while_true(void)
 {
 	char *buffer;
-	int status;
+	t_token *tokens;
 
+	tokens = NULL;
 	buffer = NULL;
 	if (signal(SIGINT, handle_sigint) == SIG_ERR) {
 		printf("failed to register interrupts with kernel\n");
@@ -72,8 +74,12 @@ void while_true(void)
 	while (TRUE)
 	{
 		buffer = read_from_input();
-		lexer(buffer);
-
+		if (!buffer || ft_strlen(buffer) == 0)
+			continue;
+		tokens = lexer(buffer);
+		expand_tokens(tokens);
+//		print_all_tokens(tokens);
+		free_list_of_tokens(tokens);
 		free(buffer);
 	}
 }
