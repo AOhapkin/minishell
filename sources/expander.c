@@ -52,8 +52,11 @@ t_token *handle_command_token(t_base *base, t_token *token)
 {
 	token = handle_redirection_tokens(base, token);
 	if (token && !strcmp(token->value, "echo"))
+	{
 		token->type = ECHO_TYPE;
-	else if (token && ft_strchr(base->command->value, '/'))
+		base->function = echo_function;
+	}
+	else if (token && ft_strchr(token->value, '/'))
 	{
 		token->type = EXEC_TYPE;
 		/*
@@ -116,5 +119,8 @@ void expand_tokens(t_token *token)
 	token = handle_command_token(&base, token);
 	token = handle_flag_tokens(&base, token);
 	token = handle_argument_tokens(&base, token);
-	printf("ok");
+	if (base.command && base.function)
+	{
+		base.function(&base);
+	}
 }

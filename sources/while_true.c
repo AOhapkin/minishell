@@ -53,9 +53,11 @@ void while_true(void)
 	while (TRUE)
 	{
 		buffer = read_from_input();
+		if (!buffer || ft_strlen(buffer) == 0)
+			continue;
 		tokens = lexer(buffer);
 		expand_tokens(tokens);
-		print_all_tokens(tokens);
+//		print_all_tokens(tokens);
 		free_list_of_tokens(tokens);
 		free(buffer);
 	}

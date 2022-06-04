@@ -99,7 +99,9 @@ typedef struct s_base
 	t_token *output;
 	int contain_args;
 	int contain_flag;
+	void (*function)(struct s_base*);
 } 				t_base;
+void echo_function(t_base *base);
 
 void while_true(void);
 char *read_from_input();
