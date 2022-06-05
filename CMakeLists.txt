@@ -67,4 +67,5 @@ add_executable(minishell
         sources/expander.c
         sources/echo_function.c
         sources/t_lexer_utils.c
+        sources/output.c
         sources/main.c)

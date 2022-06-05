@@ -6,6 +6,7 @@
 # include <stdio.h>
 #include <readline/history.h>
 #include <readline/readline.h>
+#include <fcntl.h>
 # include "libft.h"
 
 # define PROMPT "minishell > "
@@ -96,7 +97,9 @@ typedef struct s_base
 {
 	t_token *command;
 	t_token *input;
+	int in;
 	t_token *output;
+	int out;
 	int contain_args;
 	int contain_flag;
 	void (*function)(struct s_base*);
@@ -106,5 +109,10 @@ void echo_function(t_base *base);
 void while_true(void);
 char *read_from_input();
 char *read_from_input_and_join_with_previous(char *prev);
+
+
+int	open_out(t_base *base, t_token *token);
+
+
 
 #endif

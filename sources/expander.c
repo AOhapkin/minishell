@@ -115,6 +115,8 @@ void expand_tokens(t_token *token)
 	t_base base;
 
 	ft_bzero(&base, sizeof(t_base));
+	base.in = STDIN_FILENO;
+	base.out = STDOUT_FILENO;
 
 	token = handle_command_token(&base, token);
 	token = handle_flag_tokens(&base, token);
