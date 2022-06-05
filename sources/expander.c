@@ -10,40 +10,11 @@ int is_redirection_operator(t_token *token)
 
 t_token *handle_redirection_tokens(t_base *base, t_token *token)
 {
-	while (token && is_redirection_operator(token))
+	while (token
+			&& (open_in(base, token) == NOT_SKIP
+				|| open_out(base, token) == NOT_SKIP))
 	{
-		if (!strcmp(token->value, ">"))
-		{
-			token->type = REDIRECT_OUTPUT;
-			base->output = token;
-		}
-		else if (!strcmp(token->value, ">>"))
-		{
-			token->type = APPENDING_REDIRECTED_OUTPUT;
-			base->output = token;
-		}
-		else if (!strcmp(token->value, "<"))
-		{
-			token->type = REDIRECT_INPUT;
-			base->input = token;
-		}
-		else if (!strcmp(token->value, "<<"))
-		{
-			token->type = HERE_DOCUMENTS;
-			base->input = token;
-		}
-
-		token = token->next;
-		if (!token || is_redirection_operator(token) || !strcmp(token->value, "|"))
-		{
-			printf("minishell : syntax error near unexpected token `%s'\n", token->value ? token->value : "newline");
-			return NULL;
-		}
-		else
-		{
-			token->type = REDIRECT_ARG_TYPE;
-			token = token->next;
-		}
+		token = token->next->next;
 	}
 	return token;
 }

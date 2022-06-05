@@ -31,7 +31,7 @@
  */
 # define ECHO_TYPE 1
 # define EXEC_TYPE 2
-# define NUM_OF_COMMANDS 2
+# define NUM_OF_COMMANDS 2`
 
 /**
  * Flags
@@ -112,7 +112,6 @@ char *read_from_input_and_join_with_previous(char *prev);
 
 
 int	open_out(t_base *base, t_token *token);
-
-
+int	open_in(t_base *base, t_token *token);
 
 #endif
