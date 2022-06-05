@@ -43,10 +43,20 @@ char *read_from_input()
 	return (input);
 }
 
+void free_piped_ops(t_op *parent)
+{
+	if (parent)
+	{
+		free_piped_ops(parent->child);
+		free(parent);
+	}
+}
+
 void while_true(void)
 {
 	char *buffer;
 	t_token *tokens;
+	t_op *parent;
 
 	tokens = NULL;
 	buffer = NULL;
@@ -56,8 +66,10 @@ void while_true(void)
 		if (!buffer || ft_strlen(buffer) == 0)
 			continue;
 		tokens = lexer(buffer);
-		expand_tokens(tokens);
+		parent = expand(tokens);
 //		print_all_tokens(tokens);
+		interpreter(parent);
+		free_piped_ops(parent);
 		free_list_of_tokens(tokens);
 		free(buffer);
 	}

@@ -8,7 +8,7 @@ int is_redirection_operator_ish(t_token *token)
 		   || !strcmp(token->value, "<");
 }
 
-int	open_out(t_base *base, t_token *token)
+int	open_out(t_op *base, t_token *token)
 {
 	t_token *arg;
 
@@ -24,9 +24,9 @@ int	open_out(t_base *base, t_token *token)
 			exit(1); // todo переписать
 		}
 		if (!strcmp(token->value, ">"))
-			base->out = open(arg->value, O_RDWR | O_CREAT | O_APPEND, 0644);
-		else
 			base->out = open(arg->value, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		else
+			base->out = open(arg->value, O_RDWR | O_CREAT | O_APPEND, 0644);
 		token->type = REDIRECT_OUTPUT;
 		base->output = token;
 		arg->type = REDIRECT_ARG_TYPE;
@@ -35,7 +35,7 @@ int	open_out(t_base *base, t_token *token)
 	return SKIP;
 }
 
-void update_argument_token(t_base *base, t_token *arg)
+void update_argument_token(t_op *base, t_token *arg)
 {
 	char	*input;
 	char	*result;
@@ -56,7 +56,7 @@ void update_argument_token(t_base *base, t_token *arg)
 	arg->value = result;
 }
 
-int	open_in(t_base *base, t_token *token)
+int	open_in(t_op *base, t_token *token)
 {
 	t_token *arg;
 
