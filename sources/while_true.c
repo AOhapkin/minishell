@@ -67,9 +67,12 @@ void while_true(void)
 			continue;
 		tokens = lexer(buffer);
 		parent = expand(tokens);
+		if (parent != NULL)
+		{
+			interpreter(parent);
+			free_piped_ops(parent);
+		}
 //		print_all_tokens(tokens);
-		interpreter(parent);
-		free_piped_ops(parent);
 		free_list_of_tokens(tokens);
 		free(buffer);
 	}

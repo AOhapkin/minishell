@@ -104,6 +104,7 @@ typedef struct s_base
 	int contain_flag;
 	struct s_base *child;
 	void (*function)(struct s_base*);
+ 	int is_valid;
 } 				t_op;
 
 t_op *expand(t_token *token);
