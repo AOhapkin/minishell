@@ -1,24 +1,26 @@
 #include "minishell.h"
 
-void echo_function(t_base *base)
+void echo_function(t_op *op)
 {
-	t_token *current;
+	t_token *arg;
 	int is_first;
 
+	if (op->output)
+		dup2(op->out, 1);
+	arg = op->command->next;
 	is_first = TRUE;
-	current = base->command->next;
-	while (current)
+	while (arg && strcmp(arg->value, "|"))
 	{
-		if (current->type == COMMAND_ARG_TYPE)
+		if (arg->type == COMMAND_ARG_TYPE)
 		{
 			if (is_first)
 				is_first = FALSE;
 			else
 				printf(" ");
-			printf("%s", current->value);
+			printf("%s", arg->value);
 		}
-		current = current->next;
+		arg = arg->next;
 	}
-	if (base->contain_flag == FALSE)
+	if (op->contain_flag == FALSE)
 		printf("\n");
 }

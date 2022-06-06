@@ -6,6 +6,7 @@
 # include <stdio.h>
 #include <readline/history.h>
 #include <readline/readline.h>
+#include <fcntl.h>
 # include "libft.h"
 
 # define PROMPT "minishell > "
@@ -50,6 +51,7 @@
 # define APPENDING_REDIRECTED_OUTPUT 32 // >>
 # define REDIRECT_INPUT 33 // <
 # define HERE_DOCUMENTS 34 // <<
+# define PIPE 40 // |
 
 typedef struct s_token
 {
@@ -90,21 +92,32 @@ int handle_spaces(t_lexer *lexer);
 int handle_simple_char(t_lexer *lexer);
 int is_valid_char_for_env_var_name(char env_var_name_char);
 char *join_and_free_srcs(char *s1, char *s2);
-void expand_tokens(t_token *token);
 
 typedef struct s_base
 {
 	t_token *command;
 	t_token *input;
+	int in;
 	t_token *output;
+	int out;
 	int contain_args;
 	int contain_flag;
+	struct s_base *child;
 	void (*function)(struct s_base*);
-} 				t_base;
-void echo_function(t_base *base);
+} 				t_op;
+
+t_op *expand(t_token *token);
+void handle_pipes(t_op *parent);
+void interpreter(t_op *parent);
+
+void echo_function(t_op *op);
 
 void while_true(void);
 char *read_from_input();
 char *read_from_input_and_join_with_previous(char *prev);
+
+
+int	open_out(t_op *base, t_token *token);
+int	open_in(t_op *base, t_token *token);
 
 #endif

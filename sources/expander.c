@@ -8,47 +8,16 @@ int is_redirection_operator(t_token *token)
 			|| !strcmp(token->value, "<");
 }
 
-t_token *handle_redirection_tokens(t_base *base, t_token *token)
+t_token *handle_redirection_tokens(t_op *base, t_token *token)
 {
-	while (token && is_redirection_operator(token))
-	{
-		if (!strcmp(token->value, ">"))
-		{
-			token->type = REDIRECT_OUTPUT;
-			base->output = token;
-		}
-		else if (!strcmp(token->value, ">>"))
-		{
-			token->type = APPENDING_REDIRECTED_OUTPUT;
-			base->output = token;
-		}
-		else if (!strcmp(token->value, "<"))
-		{
-			token->type = REDIRECT_INPUT;
-			base->input = token;
-		}
-		else if (!strcmp(token->value, "<<"))
-		{
-			token->type = HERE_DOCUMENTS;
-			base->input = token;
-		}
-
-		token = token->next;
-		if (!token || is_redirection_operator(token) || !strcmp(token->value, "|"))
-		{
-			printf("minishell : syntax error near unexpected token `%s'\n", token->value ? token->value : "newline");
-			return NULL;
-		}
-		else
-		{
-			token->type = REDIRECT_ARG_TYPE;
-			token = token->next;
-		}
-	}
+	while (token
+			&& (open_in(base, token) == NOT_SKIP
+				|| open_out(base, token) == NOT_SKIP))
+		token = token->next->next;
 	return token;
 }
 
-t_token *handle_command_token(t_base *base, t_token *token)
+t_token *handle_command_token(t_op *base, t_token *token)
 {
 	token = handle_redirection_tokens(base, token);
 	if (token && !strcmp(token->value, "echo"))
@@ -76,7 +45,7 @@ t_token *handle_command_token(t_base *base, t_token *token)
 	return token->next;
 }
 
-t_token *handle_flag_tokens(t_base *base, t_token *token)
+t_token *handle_flag_tokens(t_op *base, t_token *token)
 {
 	while (token && !base->contain_args && base->command->type == ECHO_TYPE)
 	{
@@ -93,12 +62,12 @@ t_token *handle_flag_tokens(t_base *base, t_token *token)
 	return token;
 }
 
-t_token *handle_argument_tokens(t_base *base, t_token *token)
+t_token *handle_argument_tokens(t_op *base, t_token *token)
 {
 	while (token && strcmp(token->value, "|"))
 	{
 		token = handle_redirection_tokens(base, token);
-		if (token)
+		if (token && strcmp(token->value, "|"))
 		{
 			token->type = COMMAND_ARG_TYPE;
 			base->contain_args = TRUE;
@@ -110,17 +79,35 @@ t_token *handle_argument_tokens(t_base *base, t_token *token)
 	return token;
 }
 
-void expand_tokens(t_token *token)
+t_token *handle_pipe_token(t_op *base, t_token *token)
 {
-	t_base base;
-
-	ft_bzero(&base, sizeof(t_base));
-
-	token = handle_command_token(&base, token);
-	token = handle_flag_tokens(&base, token);
-	token = handle_argument_tokens(&base, token);
-	if (base.command && base.function)
+	token = handle_redirection_tokens(base, token);
+	if (token && !strcmp(token->value, "|"))
 	{
-		base.function(&base);
+		token->type = PIPE;
+		token = token->next;
 	}
+	return token;
+}
+
+t_op *expand(t_token *token)
+{
+	t_op *op;
+	t_op *parent;
+
+	op = ft_memalloc(sizeof(t_op));
+	op->in = STDIN_FILENO;
+	op->out = STDOUT_FILENO;
+
+	token = handle_command_token(op, token);
+	token = handle_flag_tokens(op, token);
+	token = handle_argument_tokens(op, token);
+	if (token && !strcmp(token->value, "|"))
+	{
+		parent = expand(token->next);
+		parent->child = op;
+		return parent;
+	}
+	else
+		return op;
 }
