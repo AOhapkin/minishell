@@ -81,7 +81,7 @@ t_op *expand(t_token *token)
 		free(op);
 		return NULL;
 	}
-	if (token && !strcmp(token->value, "|"))
+	if (token && !strcmp(token->value, "|") && token->next)
 	{
 		parent = expand(token->next);
 		if (parent == NULL || parent->is_valid == FALSE)
