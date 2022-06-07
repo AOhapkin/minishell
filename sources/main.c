@@ -65,35 +65,21 @@ void add_new_list_elem(t_list *list, const char *content)
 	ft_lstadd_back(&list, ft_lstnew(ft_strdup(content)));
 }
 
-char	*env_to_str(t_list *lst)
+char	**list_to_array(t_list *lst)
 {
-	char	*env;
+	char	**env;
 	int		i;
-	int		j;
-	char	*temp;
+	int		lst_size = ft_lstsize(lst);
 
-	if (!(env = malloc(sizeof(char) * ft_lstsize(lst) + 1)))
+	if (!(env = malloc(sizeof(char *) * (lst_size + 1))))
 		return (NULL);
 	i = 0;
-	while (lst && lst->next != NULL)
+	while (lst)
 	{
-		if (lst->content != NULL)
-		{
-			j = 0;
-			temp = (char *)lst->content;
-			while (temp[j])
-			{
-				env[i] = temp[j];
-				i++;
-				j++;
-			}
-			free(temp);
-		}
-		if (lst->next->next != NULL)
-			env[i++] = '\n';
+		env[i++] = (char *)(lst->content);
 		lst = lst->next;
 	}
-	env[i] = '\0';
+	env[i] = NULL;
 	return (env);
 }
 
@@ -143,9 +129,7 @@ void print_sorted_env_list(t_list *env)
 	char	**env_array;
 	char	*env_string;
 
-	env_string = env_to_str(env);
-	env_array = ft_split(env_string, '\n');
-	free(env_string);
+	env_array = list_to_array(env);
 	sort_env_array(env_array, ft_lstsize(env));
 	i = 0;
 	while (env_array[i])
