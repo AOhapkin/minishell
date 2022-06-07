@@ -60,6 +60,103 @@ void del_element_by_name(t_list *list, const char *param_name)
 	free(temp);
 }
 
+void add_new_list_elem(t_list *list, const char *content)
+{
+	ft_lstadd_back(&list, ft_lstnew(ft_strdup(content)));
+}
+
+char	*env_to_str(t_list *lst)
+{
+	char	*env;
+	int		i;
+	int		j;
+	char	*temp;
+
+	if (!(env = malloc(sizeof(char) * ft_lstsize(lst) + 1)))
+		return (NULL);
+	i = 0;
+	while (lst && lst->next != NULL)
+	{
+		if (lst->content != NULL)
+		{
+			j = 0;
+			temp = (char *)lst->content;
+			while (temp[j])
+			{
+				env[i] = temp[j];
+				i++;
+				j++;
+			}
+			free(temp);
+		}
+		if (lst->next->next != NULL)
+			env[i++] = '\n';
+		lst = lst->next;
+	}
+	env[i] = '\0';
+	return (env);
+}
+
+void	sort_env_array(char **array, int array_size)
+{
+	int		ordered;
+	int		i;
+	char	*tmp;
+
+	ordered = 0;
+	while (array && ordered == 0)
+	{
+		ordered = 1;
+		i = 0;
+		while (i < array_size - 1)
+		{
+			if (ft_strncmp(array[i], array[i + 1], strlen(array[i])) > 0)
+			{
+				tmp = array[i];
+				array[i] = array[i + 1];
+				array[i + 1] = tmp;
+				ordered = 0;
+			}
+			i++;
+		}
+		array_size--;
+	}
+}
+
+void	free_array(char **array)
+{
+	int	i;
+
+	i = 0;
+	while (array[i])
+	{
+		if (array[i])
+			free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
+void print_sorted_env_list(t_list *env)
+{
+	int	i;
+	char	**env_array;
+	char	*env_string;
+
+	env_string = env_to_str(env);
+	env_array = ft_split(env_string, '\n');
+	free(env_string);
+	sort_env_array(env_array, ft_lstsize(env));
+	i = 0;
+	while (env_array[i])
+	{
+		printf("declare -x ");
+		printf("%s\n", env_array[i]);
+		i++;
+	}
+	free_array(env_array);
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	t_list	*my_env;
@@ -78,9 +175,12 @@ int main(int argc, char **argv, char **envp)
 	elem = find_element_by_name(my_env, "PWD");
 	printf("!!!!! %s\n", (char *)elem->content);
 	// todo функция "удалить элемент по имени"
-	del_element_by_name(my_env, "USER");
-	print_lst(my_env);
+//	del_element_by_name(my_env, "USER");
+//	print_lst(my_env);
 	// todo функция "добавить элемент"
+//	add_new_list_elem(my_env, "CONTENT");
 	// todo принимает лист, возвращает сортированный массив по алфав
+	print_sorted_env_list(my_env);
+//	print_lst(my_env);
 	return (0);
 }
