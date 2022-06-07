@@ -12,16 +12,9 @@
 
 int main(int argc, char **argv, char **envp)
 {
-	t_list	*my_env;
-	int	i;
+	t_list *my_env;
 
-	i = 0;
-	my_env = ft_lstnew(ft_strdup(envp[i++]));
-	while(envp[i])
-	{
-		ft_lstadd_back(&my_env, ft_lstnew(ft_strdup(envp[i])));
-		i++;
-	}
+	my_env = save_envp_to_list(envp);
 	print_list(my_env);
 	t_list *elem = find_list_element_by_name(my_env, "USER");
 	printf("!!!!! %s\n", (char *)elem->content);

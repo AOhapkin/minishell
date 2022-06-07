@@ -1,5 +1,20 @@
 #include "minishell.h"
 
+t_list	*save_envp_to_list(char **envp)
+{
+	t_list	*new_list;
+	int		i;
+
+	i = 0;
+	new_list = ft_lstnew(ft_strdup(envp[i++]));
+	while(envp[i])
+	{
+		ft_lstadd_back(&new_list, ft_lstnew(ft_strdup(envp[i])));
+		i++;
+	}
+	return (new_list);
+}
+
 t_list *find_list_element_by_name(t_list *list, const char *param_name)
 {
 	t_list	*elem;
@@ -25,8 +40,6 @@ void	print_list(t_list *list)
 {
 	ft_lstiter(list, print_list_element_content);
 }
-
-// удаление, добавление и печать сортировки
 
 void	delete_list_element_by_name(t_list *list, const char *param_name)
 {
@@ -83,3 +96,4 @@ void	print_sorted_list(t_list *list_head)
 	print_array(values_array);
 	free_array(values_array);
 }
+
