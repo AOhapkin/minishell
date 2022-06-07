@@ -69,4 +69,6 @@ add_executable(minishell
         sources/t_lexer_utils.c
         sources/redirection.c
         sources/interpreter.c
-        sources/main.c)
+        sources/main.c
+        sources/t_list_utils.c
+        sources/array_utils.c)

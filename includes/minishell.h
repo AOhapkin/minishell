@@ -124,4 +124,13 @@ void	print_array(char **array);
 void	free_array(char **array);
 void	sort_array(char **array, int array_size);
 
+t_list	*find_list_element_by_name(t_list *list, const char *param_name);
+void	print_list_element_content(void *content);
+void	print_list(t_list *list);
+void	delete_list_element_by_name(t_list *list, const char *param_name);
+void	add_new_list_element(t_list *list, const char *content);
+char	**save_list_values_to_array(t_list *lst);
+void	print_sorted_list(t_list *list_head);
+
+
 #endif
