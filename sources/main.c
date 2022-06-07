@@ -38,10 +38,26 @@ void	print_lst(t_list *list)
 
 // удаление, добавление и печать сортировки
 
-t_list *del_element_by_name(t_list *list, const char *name)
+void del_element_by_name(t_list *list, const char *param_name)
 {
-	t_list *temp = find_element_by_name(list, name);
-	return NULL;
+	t_list *temp;
+	t_list *prev;
+	size_t name_len;
+
+	temp = list;
+	prev = NULL;
+	name_len = ft_strlen(param_name);
+	while(temp)
+	{
+		prev = temp;
+		temp = temp->next;
+		if (ft_strncmp(temp->content, param_name, ft_strlen(param_name)) == 0 && ((char*)list->content)[name_len] == '=')
+			break;
+	}
+	if (!temp)
+		return ;
+	prev->next = temp->next;
+	free(temp);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -62,8 +78,9 @@ int main(int argc, char **argv, char **envp)
 	elem = find_element_by_name(my_env, "PWD");
 	printf("!!!!! %s\n", (char *)elem->content);
 	// todo функция "удалить элемент по имени"
+	del_element_by_name(my_env, "USER");
+	print_lst(my_env);
 	// todo функция "добавить элемент"
 	// todo принимает лист, возвращает сортированный массив по алфав
-	elem = del_element_by_name(my_env, "USER");
 	return (0);
 }
