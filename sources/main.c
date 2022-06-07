@@ -65,7 +65,7 @@ void add_new_list_elem(t_list *list, const char *content)
 	ft_lstadd_back(&list, ft_lstnew(ft_strdup(content)));
 }
 
-char	**list_to_array(t_list *lst)
+char	**save_list_values_to_array(t_list *lst)
 {
 	char	**env;
 	int		i;
@@ -83,62 +83,15 @@ char	**list_to_array(t_list *lst)
 	return (env);
 }
 
-void	sort_env_array(char **array, int array_size)
-{
-	int		ordered;
-	int		i;
-	char	*tmp;
-
-	ordered = 0;
-	while (array && ordered == 0)
-	{
-		ordered = 1;
-		i = 0;
-		while (i < array_size - 1)
-		{
-			if (ft_strncmp(array[i], array[i + 1], strlen(array[i])) > 0)
-			{
-				tmp = array[i];
-				array[i] = array[i + 1];
-				array[i + 1] = tmp;
-				ordered = 0;
-			}
-			i++;
-		}
-		array_size--;
-	}
-}
-
-void	free_array(char **array)
+void print_sorted_list(t_list *list_head)
 {
 	int	i;
+	char	**values_array;
 
-	i = 0;
-	while (array[i])
-	{
-		if (array[i])
-			free(array[i]);
-		i++;
-	}
-	free(array);
-}
-
-void print_sorted_env_list(t_list *env)
-{
-	int	i;
-	char	**env_array;
-	char	*env_string;
-
-	env_array = list_to_array(env);
-	sort_env_array(env_array, ft_lstsize(env));
-	i = 0;
-	while (env_array[i])
-	{
-		printf("declare -x ");
-		printf("%s\n", env_array[i]);
-		i++;
-	}
-	free_array(env_array);
+	values_array = save_list_values_to_array(list_head);
+	sort_array(values_array, ft_lstsize(list_head));
+	print_array(values_array);
+	free_array(values_array);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -158,13 +111,18 @@ int main(int argc, char **argv, char **envp)
 	printf("!!!!! %s\n", (char *)elem->content);
 	elem = find_element_by_name(my_env, "PWD");
 	printf("!!!!! %s\n", (char *)elem->content);
-	// todo функция "удалить элемент по имени"
 //	del_element_by_name(my_env, "USER");
 //	print_lst(my_env);
-	// todo функция "добавить элемент"
 //	add_new_list_elem(my_env, "CONTENT");
-	// todo принимает лист, возвращает сортированный массив по алфав
-	print_sorted_env_list(my_env);
+	print_sorted_list(my_env);
 //	print_lst(my_env);
 	return (0);
 }
+
+// todo разнести на файлы
+
+// todo поиск и запуск бинарника
+
+// todo обработка ошибок
+
+// todo удаление единственного элемента листа

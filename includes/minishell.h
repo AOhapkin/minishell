@@ -120,4 +120,8 @@ char *read_from_input_and_join_with_previous(char *prev);
 int	open_out(t_op *base, t_token *token);
 int	open_in(t_op *base, t_token *token);
 
+void	print_array(char **array);
+void	free_array(char **array);
+void	sort_array(char **array, int array_size);
+
 #endif
