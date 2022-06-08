@@ -132,8 +132,6 @@ typedef struct s_glob
 
 t_glob	*singleton;
 
-
-
 t_list	*save_envp_to_list(char **envp);
 t_list	*find_list_element_by_name(t_list *list, const char *param_name);
 void	print_list_element_content(void *content);
@@ -142,5 +140,9 @@ void	delete_list_element_by_name(t_list *list, const char *param_name);
 void	add_new_list_element(t_list *list, const char *content);
 char	**save_list_values_to_array(t_list *list);
 void	print_sorted_list(t_list *list_head);
+
+// export
+
+void	export_function(t_list *arguments);
 
 #endif

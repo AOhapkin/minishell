@@ -71,4 +71,5 @@ add_executable(minishell
         sources/interpreter.c
         sources/main.c
         sources/t_list_utils.c
-        sources/array_utils.c)
+        sources/array_utils.c
+        sources/export_function.c)
