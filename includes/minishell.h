@@ -31,6 +31,7 @@
  */
 # define ECHO_TYPE 1
 # define EXEC_TYPE 2
+# define EXIT_TYPE 3
 # define NUM_OF_COMMANDS 2
 
 /**

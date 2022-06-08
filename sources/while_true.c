@@ -47,6 +47,10 @@ void free_piped_ops(t_op *parent)
 {
 	if (parent)
 	{
+		if (parent->out != STDOUT_FILENO)
+			close(parent->out);
+		if (parent->in != STDIN_FILENO)
+			close(parent->in);
 		free_piped_ops(parent->child);
 		free(parent);
 	}
