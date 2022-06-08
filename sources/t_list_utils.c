@@ -68,19 +68,18 @@ void	add_new_list_element(t_list *list, const char *content)
 	ft_lstadd_back(&list, ft_lstnew(ft_strdup(content)));
 }
 
-char	**save_list_values_to_array(t_list *lst)
+char	**save_list_values_to_array(t_list *list)
 {
 	char	**env;
 	int		i;
-	int		lst_size = ft_lstsize(lst);
+	int		list_size = ft_lstsize(list);
 
-	if (!(env = malloc(sizeof(char *) * (lst_size + 1))))
-		return (NULL);
+	env = ft_memalloc(list_size + 1);
 	i = 0;
-	while (lst)
+	while (list)
 	{
-		env[i++] = (char *)(lst->content);
-		lst = lst->next;
+		env[i++] = (char *)(list->content);
+		list = list->next;
 	}
 	env[i] = NULL;
 	return (env);
@@ -88,12 +87,10 @@ char	**save_list_values_to_array(t_list *lst)
 
 void	print_sorted_list(t_list *list_head)
 {
-	int	i;
 	char	**values_array;
 
 	values_array = save_list_values_to_array(list_head);
 	sort_array(values_array, ft_lstsize(list_head));
 	print_array(values_array);
-	free_array(values_array);
 }
 

@@ -26,20 +26,6 @@ void	sort_array(char **array, int array_size)
 	}
 }
 
-void	free_array(char **array)
-{
-	int	i;
-
-	i = 0;
-	while (array[i])
-	{
-		if (array[i])
-			free(array[i]);
-		i++;
-	}
-	free(array);
-}
-
 void	print_array(char **array)
 {
 	int	i;
