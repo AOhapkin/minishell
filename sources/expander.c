@@ -17,6 +17,11 @@ t_token *handle_command_token(t_op *base, t_token *token)
 		token->type = ECHO_TYPE;
 		base->function = echo_function;
 	}
+	else if (token && !strcmp(token->value, "export"))
+	{
+		token->type = EXPORT_TYPE;
+		base->function = export_function;
+	}
 	else if (token && !strcmp(token->value, "exit"))
 		token->type = EXIT_TYPE;
 	else if (token && ft_strchr(token->value, '/'))
@@ -33,13 +38,13 @@ t_token *handle_command_token(t_op *base, t_token *token)
 
 t_token *handle_flag_tokens(t_op *base, t_token *token)
 {
-	while (base->is_valid && token && !base->contain_args && base->command->type == ECHO_TYPE)
+	while (base->is_valid && token && !base->is_contain_args && base->command->type == ECHO_TYPE)
 	{
 		token = handle_redirection_tokens(base, token);
 		if (token && !strcmp(token->value, "-n"))
 		{
 			token->type = ECHO_N_FLAG;
-			base->contain_flag = TRUE;
+			base->is_contain_flag = TRUE;
 			token = token->next;
 		}
 		else
@@ -56,7 +61,7 @@ t_token *handle_argument_tokens(t_op *base, t_token *token)
 		if (token && strcmp(token->value, "|"))
 		{
 			token->type = COMMAND_ARG_TYPE;
-			base->contain_args = TRUE;
+			base->is_contain_args = TRUE;
 			token = token->next;
 		}
 		else
@@ -85,6 +90,7 @@ t_op *expand(t_token *token)
 	}
 	if (token && !strcmp(token->value, "|") && token->next)
 	{
+		token->type = PIPE;
 		parent = expand(token->next);
 		if (parent == NULL || parent->is_valid == FALSE)
 		{

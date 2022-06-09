@@ -1,7 +1,4 @@
-#include <stdbool.h>
 #include "minishell.h"
-
-
 
 int	is_valid_env_char(char c)
 {
@@ -24,85 +21,48 @@ int	is_valid_export_arg(char *argument)
 	return (FALSE);
 }
 
-int is_same_key_exist(char *argument)
+void add_or_update_env_var(char *arg)
 {
-	size_t len_for_compare;
+	t_list *current;
+	t_env *new_env;
+	char **separated;
 
-	if (ft_strchr(argument, '='))
-		len_for_compare = ft_strchr(argument, '=') - argument + 1;
-	else
-		len_for_compare = ft_strlen(argument);
-	
-	return 0;
-}
-
-//void	export_function(t_list *arguments)
-//{
-//	int		args_count;
-//
-//	args_count = ft_lstsize(arguments);
-//	if (args_count == 1)
-//		print_sorted_list(singleton->g_env);
-//	else
-//	{
-//		arguments = arguments->next;
-//		while(arguments)
-//		{
-//			//todo валидация строки и ошибка на экран
-//			if (!is_valid_export_arg(arguments->content))
-//			{
-//				printf("Not valid arg - %s\n\n", (char *)arguments->content);
-//				break;
-//			}
-//			if (is_same_key_exist(arguments->content))
-//				find_and_replace(arguments->content);
-//			else
-//				add_new_list_element(singleton->g_env, arguments->content);
-//			arguments = arguments->next;
-//		}
-//	}
-//}
-
-void add_or_update_the_parameter(t_list *env_list, char *export_arg)
-{
-	size_t len_for_compare;
-	t_list *param;
-
-	if (ft_strchr(export_arg, '='))
-		len_for_compare = ft_strchr(export_arg, '=') - export_arg + 1;
-	else
-		len_for_compare = ft_strlen(export_arg);
-	param = find_list_element_by_name(env_list, export_arg,
-									  len_for_compare);
-	if (param == NULL)
-		add_new_list_element(singleton->g_env, export_arg);
-	else
+	separated = ft_split(arg, '=');
+	current = find_element_by_key(singleton->env, separated[0]);
+	if (current == NULL)
 	{
-		free(param->content);
-		param->content = export_arg;
+		new_env = new_env_by_key_value(separated[0], separated[1]);
+		current = ft_lstnew(new_env);
+		ft_lstadd_back(&(singleton->env), current);
 	}
-}
-
-void	export_function(t_list *arguments)
-{
-	int		args_count;
-
-	args_count = ft_lstsize(arguments);
-	if (args_count == 1)
-		print_sorted_list(singleton->g_env);
 	else
 	{
-		arguments = arguments->next;
-		while(arguments)
+		free(((t_env*)(current->content))->value);
+		((t_env*)(current->content))->value = separated[1];
+		free(separated[0]);
+	}
+	free(separated);
+}
+
+void	export_function(t_op *operation)
+{
+	t_token	*args;
+
+	if (operation->is_contain_args == FALSE)
+		print_sorted_list(singleton->env);
+	else
+	{
+		args = operation->command->next;
+		while(args && args->type != PIPE)
 		{
-			//todo валидация строки и ошибка на экран
-			if (!is_valid_export_arg(arguments->content))
+			if (!is_valid_export_arg(args->value))
 			{
-				printf("Not valid arg - %s\n\n", (char *)arguments->content);
+				printf("Not valid arg - %s\n", (char *)args->value);
 				break;
 			}
-			add_or_update_the_parameter(singleton->g_env, arguments->content);
-			arguments = arguments->next;
+			add_or_update_env_var(args->value);
+			args = args->next;
 		}
+//		print_sorted_list(singleton->env); // оставил чтобы можно было проверить добавление
 	}
 }

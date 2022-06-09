@@ -56,7 +56,7 @@ void free_piped_ops(t_op *parent)
 	}
 }
 
-void while_true(void)
+void routine(void)
 {
 	char *buffer;
 	t_token *tokens;

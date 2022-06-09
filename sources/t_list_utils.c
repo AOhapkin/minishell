@@ -1,46 +1,47 @@
 #include "minishell.h"
 
+void print_env(void *env)
+{
+	char *key;
+	char *value;
+
+	key = ((t_env*)env)->key;
+	value = ((t_env*)env)->value;
+	printf("%s=%s\n", key, value);
+}
+
 t_list	*save_envp_to_list(char **envp)
 {
-	t_list	*new_list;
+	t_list	*result;
+	t_list	*new_element;
+	t_env	*env;
 	int		i;
 
 	i = 0;
-	new_list = ft_lstnew(ft_strdup(envp[i++]));
+	result = NULL;
 	while(envp[i])
 	{
-		ft_lstadd_back(&new_list, ft_lstnew(ft_strdup(envp[i])));
+		env = new_env_by_envp(envp[i]);
+		new_element = ft_lstnew(env);
+		ft_lstadd_back(&result, new_element);
 		i++;
 	}
-	return (new_list);
+	return (result);
 }
 
-t_list *find_list_element_by_name(t_list *list, const char *param_name, size_t len)
+t_list *find_element_by_key(t_list *list, char *key)
 {
 	t_list	*elem;
-	size_t name_len = ft_strlen(param_name);
 	while (list)
 	{
-		if (ft_strncmp(list->content, param_name, len) == 0 && ((char*)list->content)[name_len] == '=')
-		{
-			elem = ft_lstnew(list->content);
-			return elem;
-		}
+		if (!ft_strcmp(key, ((t_env*)(list->content))->key))
+			return list;
 		list = list->next;
 	}
 	return NULL;
 }
 
-void	print_list_element_content(void *content)
-{
-	printf("%s\n", (char *)content);
-}
-
-void	print_list(t_list *list)
-{
-	ft_lstiter(list, print_list_element_content);
-}
-
+// todo перепроверить
 void	delete_list_element_by_name(t_list *list, const char *param_name)
 {
 	t_list *temp;
@@ -63,22 +64,18 @@ void	delete_list_element_by_name(t_list *list, const char *param_name)
 	free(temp);
 }
 
-void	add_new_list_element(t_list *list, const char *content)
+t_env	**list_to_array(t_list *list)
 {
-	ft_lstadd_back(&list, ft_lstnew(ft_strdup(content)));
-}
-
-char	**save_list_values_to_array(t_list *list)
-{
-	char	**env;
+	t_env	**env;
 	int		i;
-	int		list_size = ft_lstsize(list);
+	int		list_size;
 
-	env = ft_memalloc(list_size + 1);
+	list_size= ft_lstsize(list);
+	env = ft_memalloc((list_size + 1) * sizeof(t_env*));
 	i = 0;
 	while (list)
 	{
-		env[i++] = (char *)(list->content);
+		env[i++] = (t_env *)(list->content);
 		list = list->next;
 	}
 	env[i] = NULL;
@@ -87,16 +84,11 @@ char	**save_list_values_to_array(t_list *list)
 
 void	print_sorted_list(t_list *list_head)
 {
-	char	**values_array;
+	t_env	**values_array;
 
-	values_array = save_list_values_to_array(list_head);
-	sort_array(values_array, ft_lstsize(list_head));
-	print_array(values_array);
-	printf("\n");
-	printf("\n");
-	printf("\n");
-	printf("\n");
-	print_list(list_head);
-
+	values_array = list_to_array(list_head);
+	sort_t_env_array(values_array, ft_lstsize(list_head));
+	print_t_env_array(values_array);
+	free(values_array);
 }
 

@@ -1,24 +1,24 @@
 #include "minishell.h"
 
-void	sort_array(char **array, int array_size)
+void	sort_t_env_array(t_env **array, int array_size)
 {
-	int		ordered;
+	int		is_ordered;
 	int		i;
-	char	*tmp;
+	t_env	*tmp;
 
-	ordered = 0;
-	while (array && ordered == 0)
+	is_ordered = FALSE;
+	while (array && is_ordered == 0)
 	{
-		ordered = 1;
+		is_ordered = TRUE;
 		i = 0;
 		while (i < array_size - 1)
 		{
-			if (ft_strncmp(array[i], array[i + 1], strlen(array[i])) > 0)
+			if (ft_strcmp(array[i]->key, array[i + 1]->key) > 0)
 			{
 				tmp = array[i];
 				array[i] = array[i + 1];
 				array[i + 1] = tmp;
-				ordered = 0;
+				is_ordered = FALSE;
 			}
 			i++;
 		}
@@ -26,54 +26,20 @@ void	sort_array(char **array, int array_size)
 	}
 }
 
-void print_name_and_value(const char *string)
+void print_name_and_value(t_env *env_var)
 {
-	char	*name;
-	char	*value;
+	char *name;
+	char *value;
 
-	printf("%s  ", string);
-
-
-	if (ft_strchr(string, '='))
+	printf("%s", env_var->key);
+	if (env_var->value)
 	{
-
+		printf("=\"%s\"", env_var->value);
 	}
-	else
-	{
-		printf("%s\n", string);
-	}
-//	printf("%s", name_value[0]);
-//	if (ft_strchr(string, '='))
-//	{
-//		printf("=\"");
-//		if (name_value[1])
-//			printf("%s", name_value[1]);
-//		printf("\"");
-//	}
 	printf("\n");
-
-
-//	while (*name_value)
-//	{
-//		free(*name_value);
-//		*name_value = NULL;
-//		name_value++;
-//	}
-//	free(name_value);
-//	name_value = NULL;
 }
 
-
-//void print_name_and_value(char *string)
-//{
-//	char	**name_value;
-//
-//	printf("%s\n", string);
-//}
-
-
-
-void	print_array(char **array)
+void	print_t_env_array(t_env **array)
 {
 	int	i;
 
