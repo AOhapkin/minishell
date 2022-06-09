@@ -26,6 +26,53 @@ void	sort_array(char **array, int array_size)
 	}
 }
 
+void print_name_and_value(const char *string)
+{
+	char	*name;
+	char	*value;
+
+	printf("%s  ", string);
+
+
+	if (ft_strchr(string, '='))
+	{
+
+	}
+	else
+	{
+		printf("%s\n", string);
+	}
+//	printf("%s", name_value[0]);
+//	if (ft_strchr(string, '='))
+//	{
+//		printf("=\"");
+//		if (name_value[1])
+//			printf("%s", name_value[1]);
+//		printf("\"");
+//	}
+	printf("\n");
+
+
+//	while (*name_value)
+//	{
+//		free(*name_value);
+//		*name_value = NULL;
+//		name_value++;
+//	}
+//	free(name_value);
+//	name_value = NULL;
+}
+
+
+//void print_name_and_value(char *string)
+//{
+//	char	**name_value;
+//
+//	printf("%s\n", string);
+//}
+
+
+
 void	print_array(char **array)
 {
 	int	i;
@@ -34,7 +81,7 @@ void	print_array(char **array)
 	while (array[i])
 	{
 		printf("declare -x ");
-		printf("%s\n", array[i]);
+		print_name_and_value(array[i]);
 		i++;
 	}
 }

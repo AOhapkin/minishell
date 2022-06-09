@@ -15,13 +15,13 @@ t_list	*save_envp_to_list(char **envp)
 	return (new_list);
 }
 
-t_list *find_list_element_by_name(t_list *list, const char *param_name)
+t_list *find_list_element_by_name(t_list *list, const char *param_name, size_t len)
 {
 	t_list	*elem;
 	size_t name_len = ft_strlen(param_name);
 	while (list)
 	{
-		if (ft_strncmp(list->content, param_name, ft_strlen(param_name)) == 0 && ((char*)list->content)[name_len] == '=')
+		if (ft_strncmp(list->content, param_name, len) == 0 && ((char*)list->content)[name_len] == '=')
 		{
 			elem = ft_lstnew(list->content);
 			return elem;
@@ -92,5 +92,11 @@ void	print_sorted_list(t_list *list_head)
 	values_array = save_list_values_to_array(list_head);
 	sort_array(values_array, ft_lstsize(list_head));
 	print_array(values_array);
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	print_list(list_head);
+
 }
 

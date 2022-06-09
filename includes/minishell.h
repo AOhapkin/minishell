@@ -133,7 +133,7 @@ typedef struct s_glob
 t_glob	*singleton;
 
 t_list	*save_envp_to_list(char **envp);
-t_list	*find_list_element_by_name(t_list *list, const char *param_name);
+t_list *find_list_element_by_name(t_list *list, const char *param_name, size_t len);
 void	print_list_element_content(void *content);
 void	print_list(t_list *list);
 void	delete_list_element_by_name(t_list *list, const char *param_name);
