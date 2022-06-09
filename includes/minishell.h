@@ -31,6 +31,7 @@
  */
 # define ECHO_TYPE 1
 # define EXEC_TYPE 2
+# define EXIT_TYPE 3
 # define NUM_OF_COMMANDS 2
 
 /**
@@ -104,6 +105,7 @@ typedef struct s_base
 	int contain_flag;
 	struct s_base *child;
 	void (*function)(struct s_base*);
+ 	int is_valid;
 } 				t_op;
 
 t_op *expand(t_token *token);
