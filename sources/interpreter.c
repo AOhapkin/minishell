@@ -49,26 +49,27 @@ void handle_pipes(t_op *parent)
 	}
 }
 
+int is_redirectable_op(t_op *op)
+{
+	char op_type;
+	op_type = op->command->type;
+	return op_type == ECHO_TYPE;
+}
+
+void no_pipes_execution(t_op *op)
+{
+	if (op->out && is_redirectable_op(op))
+		handle_pipes(op);
+	else
+		op->function(op);
+}
+
 void interpreter(t_op *parent)
 {
-	int		fd[2];
-	pid_t	pid1;
-	pid_t	pid2;
-
-//	if (parent->command->type == EXIT_TYPE)
-//		exit(0);
-//	if (pipe(fd) == 0)
-//	{
-//		pid1 = fork();
-//		if (pid1 == 0)
-//			run_child_process(fd, parent->child);
-//		pid2 = fork();
-//		if (pid2 == 0)
-//			run_parent_process(fd, parent);
-//		close(fd[0]);
-//		close(fd[1]);
-//		waitpid(pid1, NULL, 0);
-//		waitpid(pid2, NULL, 0);
-//	}
-	parent->function(parent);
+	if (parent->command->type == EXIT_TYPE)
+		exit(0);
+	if (parent->child)
+		handle_pipes(parent);
+	else
+		no_pipes_execution(parent);
 }
