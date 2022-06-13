@@ -75,7 +75,7 @@ int	open_in(t_op *base, t_token *token)
 			return SKIP;
 		}
 
-		if (!strcmp(token->value, ">"))
+		if (!strcmp(token->value, "<")) // todo если файла нет должен "-bash: loh.txt: No such file or directory"
 			base->in = open(arg->value, O_RDWR | O_CREAT | O_TRUNC, 0644);
 		else
 			update_argument_token(base, arg);

@@ -33,6 +33,8 @@
 # define EXEC_TYPE 2
 # define EXIT_TYPE 3
 # define EXPORT_TYPE 4
+# define ENV_TYPE 5
+# define UNSET_TYPE 6
 # define CD_TYPE 7
 # define NUM_OF_COMMANDS 4
 
@@ -151,14 +153,16 @@ t_list	*save_envp_to_list(char **envp);
 t_list *find_element_by_key(t_list *list, char *key);
 void	print_list_element_content(void *content);
 void	print_list(t_list *list);
-void	delete_list_element_by_name(t_list *list, const char *param_name);
+void	delete_list_element_by_name(t_list **list, const char *param_name);
 t_env	**list_to_array(t_list *list);
 void	print_sorted_list(t_list *list_head);
 
 // export
 
-void	export_function(t_op *operation);
 int		ft_strcmp(const char *s1, const char *s2);
+void	export_function(t_op *op);
+void	env_function(t_op *op);
+void	unset_function(t_op *op);
 
 // cd
 

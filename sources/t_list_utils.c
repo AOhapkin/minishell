@@ -41,27 +41,30 @@ t_list *find_element_by_key(t_list *list, char *key)
 	return NULL;
 }
 
-// todo перепроверить
-void	delete_list_element_by_name(t_list *list, const char *param_name)
+void	delete_list_element_by_name(t_list **list, const char *param_name)
 {
-	t_list *temp;
+	t_list *current;
 	t_list *prev;
-	size_t name_len;
+	t_env *env_var;
 
-	temp = list;
 	prev = NULL;
-	name_len = ft_strlen(param_name);
-	while(temp)
+	current = *list;
+	while(current)
 	{
-		prev = temp;
-		temp = temp->next;
-		if (ft_strncmp(temp->content, param_name, ft_strlen(param_name)) == 0 && ((char*)list->content)[name_len] == '=')
-			break;
+		env_var = current->content;
+		if (!ft_strcmp(param_name, env_var->key))
+		{
+			if (!prev)
+				*list = current->next;
+			else
+				prev->next = current->next;
+			free_env(&env_var);
+			free(current);
+			return;
+		}
+		prev = current;
+		current = current->next;
 	}
-	if (!temp)
-		return ;
-	prev->next = temp->next;
-	free(temp);
 }
 
 t_env	**list_to_array(t_list *list)
