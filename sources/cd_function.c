@@ -55,10 +55,10 @@ void	cd_function(t_op *operation)
 		path = operation->command->next->value;
 	if (path)
 	{
-		updade_old_pwd();
 		cd_result = chdir(path);
 		if (cd_result == 0)
 		{
+			updade_old_pwd();
 			updade_pwd();
 			return ;
 		}
