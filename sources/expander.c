@@ -12,6 +12,7 @@ t_token *handle_redirection_tokens(t_op *base, t_token *token)
 t_token *handle_command_token(t_op *base, t_token *token)
 {
 	token = handle_redirection_tokens(base, token);
+	base->command = token;
 	if (token && !strcmp(token->value, "echo"))
 	{
 		token->type = ECHO_TYPE;
@@ -21,6 +22,16 @@ t_token *handle_command_token(t_op *base, t_token *token)
 	{
 		token->type = EXPORT_TYPE;
 		base->function = export_function;
+	}
+	else if (token && !strcmp(token->value, "env"))
+	{
+		token->type = ENV_TYPE;
+		base->function = env_function;
+	}
+	else if (token && !strcmp(token->value, "unset"))
+	{
+		token->type = UNSET_TYPE;
+		base->function = unset_function;
 	}
 	else if (token && !strcmp(token->value, "exit"))
 		token->type = EXIT_TYPE;
@@ -32,7 +43,6 @@ t_token *handle_command_token(t_op *base, t_token *token)
 		base->is_valid = FALSE;
 		return NULL;
 	}
-	base->command = token;
 	return token->next;
 }
 
