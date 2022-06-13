@@ -47,12 +47,16 @@ void free_piped_ops(t_op *parent)
 {
 	if (parent)
 	{
+		if (parent->out != STDOUT_FILENO)
+			close(parent->out);
+		if (parent->in != STDIN_FILENO)
+			close(parent->in);
 		free_piped_ops(parent->child);
 		free(parent);
 	}
 }
 
-void while_true(void)
+void routine(void)
 {
 	char *buffer;
 	t_token *tokens;
@@ -67,9 +71,12 @@ void while_true(void)
 			continue;
 		tokens = lexer(buffer);
 		parent = expand(tokens);
+		if (parent != NULL)
+		{
+			interpreter(parent);
+			free_piped_ops(parent);
+		}
 //		print_all_tokens(tokens);
-		interpreter(parent);
-		free_piped_ops(parent);
 		free_list_of_tokens(tokens);
 		free(buffer);
 	}

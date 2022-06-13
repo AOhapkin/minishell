@@ -21,6 +21,6 @@ void echo_function(t_op *op)
 		}
 		arg = arg->next;
 	}
-	if (op->contain_flag == FALSE)
+	if (op->is_contain_flag == FALSE)
 		printf("\n");
 }

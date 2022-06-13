@@ -20,8 +20,9 @@ int	open_out(t_op *base, t_token *token)
 		arg = token->next;
 		if (!arg || is_redirection_operator_ish(arg) || !strcmp(arg->value, "|"))
 		{
-			printf("minishell : syntax error near unexpected token `%s'\n", arg->value ? arg->value : "newline");
-			exit(1); // todo переписать
+			base->is_valid = FALSE;
+			printf("minishell : syntax error near unexpected token `%s'\n", arg ? arg->value : "newline");
+			return SKIP;
 		}
 		if (!strcmp(token->value, ">"))
 			base->out = open(arg->value, O_RDWR | O_CREAT | O_TRUNC, 0644);
@@ -69,8 +70,9 @@ int	open_in(t_op *base, t_token *token)
 		arg = token->next;
 		if (!arg || is_redirection_operator_ish(arg) || !strcmp(arg->value, "|"))
 		{
-			printf("minishell : syntax error near unexpected token `%s'\n", arg->value ? arg->value : "newline");
-			exit(1); // todo переписать
+			base->is_valid = FALSE;
+			printf("minishell : syntax error near unexpected token `%s'\n", arg ? arg->value : "newline");
+			return SKIP;
 		}
 
 		if (!strcmp(token->value, ">"))

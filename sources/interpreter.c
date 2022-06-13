@@ -3,13 +3,16 @@
 
 void run_child_process(int fd[2], t_op *child)
 {
-	dup2(fd[1], 1);
-	close(fd[0]);
-	close(fd[1]);
-	if (child->child)
-		handle_pipes(child);
-	else
-		child->function(child);
+	if (child)
+	{
+		dup2(fd[1], 1);
+		close(fd[0]);
+		close(fd[1]);
+		if (child->child)
+			handle_pipes(child);
+		else
+			child->function(child);
+	}
 	exit(0);
 }
 
@@ -46,10 +49,27 @@ void handle_pipes(t_op *parent)
 	}
 }
 
+int is_redirectable_op(t_op *op)
+{
+	char op_type;
+	op_type = op->command->type;
+	return op_type == ECHO_TYPE;
+}
+
+void no_pipes_execution(t_op *op)
+{
+	if (op->out && is_redirectable_op(op))
+		handle_pipes(op);
+	else
+		op->function(op);
+}
+
 void interpreter(t_op *parent)
 {
+	if (parent->command->type == EXIT_TYPE)
+		exit(0);
 	if (parent->child)
 		handle_pipes(parent);
 	else
-		parent->function(parent);
+		no_pipes_execution(parent);
 }
