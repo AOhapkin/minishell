@@ -33,6 +33,7 @@
 # define EXEC_TYPE 2
 # define EXIT_TYPE 3
 # define EXPORT_TYPE 4
+# define CD_TYPE 7
 # define NUM_OF_COMMANDS 4
 
 /**
@@ -158,5 +159,9 @@ void	print_sorted_list(t_list *list_head);
 
 void	export_function(t_op *operation);
 int		ft_strcmp(const char *s1, const char *s2);
+
+// cd
+
+void	cd_function(t_op *operation);
 
 #endif

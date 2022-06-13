@@ -101,3 +101,9 @@
           - [ ] `XPC_FLAGS=`
           - [ ] `XPC_FLAGS` - **env** такой параметр не покажет!
       - **env**
+      - **cd**
+        - перейти в директорию
+          - `char *getcwd(char *buffer, size_t size);` 
+          - `int chdir(const char *path);` - смена текущей рабочей директории
+        - как это влияет на input/output (< > >>)
+        - pipe
