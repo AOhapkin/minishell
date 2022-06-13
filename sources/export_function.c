@@ -44,15 +44,19 @@ void add_or_update_env_var(char *arg)
 	free(separated);
 }
 
-void	export_function(t_op *operation)
+void	export_function(t_op *op)
 {
 	t_token	*args;
 
-	if (operation->is_contain_args == FALSE)
+	if (op->is_contain_args == FALSE)
+	{
+		if (op->out != STDOUT_FILENO)
+			dup2(op->out, 1);
 		print_sorted_list(singleton->env);
+	}
 	else
 	{
-		args = operation->command->next;
+		args = op->command->next;
 		while(args && args->type != PIPE)
 		{
 			if (!is_valid_export_arg(args->value))

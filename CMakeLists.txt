@@ -73,4 +73,5 @@ add_executable(minishell
         sources/t_list_utils.c
         sources/array_utils.c
         sources/t_env_util.c
-        sources/export_function.c)
+        sources/export_function.c
+        sources/env_function.c)

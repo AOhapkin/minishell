@@ -22,6 +22,11 @@ t_token *handle_command_token(t_op *base, t_token *token)
 		token->type = EXPORT_TYPE;
 		base->function = export_function;
 	}
+	else if (token && !strcmp(token->value, "env"))
+	{
+		token->type = ENV_TYPE;
+		base->function = env_function;
+	}
 	else if (token && !strcmp(token->value, "exit"))
 		token->type = EXIT_TYPE;
 	else if (token && ft_strchr(token->value, '/'))

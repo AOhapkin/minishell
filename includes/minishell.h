@@ -33,6 +33,7 @@
 # define EXEC_TYPE 2
 # define EXIT_TYPE 3
 # define EXPORT_TYPE 4
+# define ENV_TYPE 5
 # define NUM_OF_COMMANDS 4
 
 /**
@@ -156,7 +157,8 @@ void	print_sorted_list(t_list *list_head);
 
 // export
 
-void	export_function(t_op *operation);
+void	export_function(t_op *op);
 int		ft_strcmp(const char *s1, const char *s2);
+void	env_function(t_op *op);
 
 #endif
