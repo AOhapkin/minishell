@@ -33,6 +33,11 @@ t_token *handle_command_token(t_op *base, t_token *token)
 		token->type = UNSET_TYPE;
 		base->function = unset_function;
 	}
+	else if (token && !strcmp(token->value, "pwd"))
+	{
+		token->type = PWD_TYPE;
+		base->function = pwd_function;
+	}
 	else if (token && !strcmp(token->value, "exit"))
 		token->type = EXIT_TYPE;
 	else if (token && ft_strchr(token->value, '/'))

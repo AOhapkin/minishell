@@ -35,6 +35,7 @@
 # define EXPORT_TYPE 4
 # define ENV_TYPE 5
 # define UNSET_TYPE 6
+# define PWD_TYPE 8
 # define NUM_OF_COMMANDS 4
 
 /**
@@ -162,5 +163,6 @@ int		ft_strcmp(const char *s1, const char *s2);
 void	export_function(t_op *op);
 void	env_function(t_op *op);
 void	unset_function(t_op *op);
+void	pwd_function(t_op *op);
 
 #endif
