@@ -7,7 +7,10 @@ char *get_home_path()
 
 	env_home = find_element_by_key(singleton->env, "HOME");
 	if (env_home == NULL)
-		printf("minishell > cd: OLDPWD not set\"");
+	{
+		printf("minishell > cd: HOME not set\n");
+		return NULL;
+	}
 	home_path = ((t_env *)env_home->content)->value;
 	return (home_path);
 }
