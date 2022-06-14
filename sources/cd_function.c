@@ -15,36 +15,91 @@ char *get_home_path()
 	return (home_path);
 }
 
-void updade_old_pwd()
-{
-	t_list *pwd_list;
-	t_list *old_pwd_list;
-	t_env *old_pwd_env;
-	t_env *pwd_env;
-
-	pwd_list = find_element_by_key(singleton->env, "PWD");
-	if (pwd_list == NULL)
-		printf("minishell > cd: PWD not set\"");
-	old_pwd_list = find_element_by_key(singleton->env, "OLDPWD");
-	if (old_pwd_list == NULL)
-		printf("minishell > cd: OLDPWD not set\"");
-	pwd_env = pwd_list->content;
-	old_pwd_env = old_pwd_list->content;
-	if (old_pwd_env->value)
-		free(old_pwd_env->value);
-	old_pwd_env->value = pwd_env->value;
-}
+//void updade_old_pwd()
+//{
+//	t_list *pwd_list;
+//	t_list *old_pwd_list;
+//	t_env *old_pwd_env;
+//	t_env *pwd_env;
+//
+//	old_pwd_list = find_element_by_key(singleton->env, "OLDPWD");
+//	if (old_pwd_list)
+//	{
+//		pwd_list = find_element_by_key(singleton->env, "PWD");
+//		if (pwd_list)
+//		{
+//			pwd_env = pwd_list->content;
+//			old_pwd_env = old_pwd_list->content;
+//			if (old_pwd_env->value)
+//				free(old_pwd_env->value);
+//			old_pwd_env->value = pwd_env->value;
+//		}
+//
+//	}
+//}
 
 void updade_pwd()
 {
 	char	current_directory[256];
 	t_list	*pwd_list;
 	t_env	*pwd_env;
+	t_list *old_pwd_list;
+	t_env *old_pwd_env;
 
-	getcwd(current_directory, 256);
 	pwd_list = find_element_by_key(singleton->env, "PWD");
-	pwd_env = pwd_list->content;
-	pwd_env->value = ft_strdup(current_directory);
+	old_pwd_list = find_element_by_key(singleton->env, "OLDPWD");
+	if (pwd_list)
+	{
+		// Если есть переменная PWD, записываем её значение в OLDPWD
+		pwd_env = pwd_list->content;
+		if (old_pwd_list)
+		{
+			old_pwd_env = old_pwd_list->content;
+			if (old_pwd_env)
+			{
+				free(old_pwd_env->value);
+				old_pwd_env->value = pwd_env->value;
+			}
+		}
+	}
+	else
+	{
+		//если нет переменной PWD, удаляем значение OLDPWD
+		if (old_pwd_list)
+		{
+			old_pwd_env = old_pwd_list->content;
+			if (old_pwd_env)
+			{
+				free(old_pwd_env->value);
+				old_pwd_env->value = ft_strdup("");
+			}
+		}
+	}
+	// Получаем значение текущей директории и записываем в PWD
+	if (getcwd(current_directory, 256))
+	{
+		if (pwd_list)
+		{
+			pwd_env = pwd_list->content;
+			if (pwd_env)
+			{
+				free(pwd_env->value);
+				pwd_env->value = ft_strdup(current_directory);
+			}
+		}
+	}
+
+//	char	current_directory[256];
+//	t_list	*pwd_list;
+//	t_env	*pwd_env;
+//
+//	pwd_list = find_element_by_key(singleton->env, "PWD");
+//	if (pwd_list)
+//	{
+//		getcwd(current_directory, 256);
+//		pwd_env = pwd_list->content;
+//		pwd_env->value = ft_strdup(current_directory);
+//	}
 }
 
 void	cd_function(t_op *operation)
@@ -61,7 +116,7 @@ void	cd_function(t_op *operation)
 		cd_result = chdir(path);
 		if (cd_result == 0)
 		{
-			updade_old_pwd();
+//			updade_old_pwd();
 			updade_pwd();
 			return ;
 		}
