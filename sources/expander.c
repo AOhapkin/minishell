@@ -9,6 +9,60 @@ t_token *handle_redirection_tokens(t_op *base, t_token *token)
 	return token;
 }
 
+char *get_path_to_bin(char *name, char *env_path_value)
+{
+	char **paths;
+	char	*temp;
+	char	*full_path;
+	int		i;
+
+	paths = ft_split(env_path_value, ':');
+	i = 0;
+	while (paths[i] != NULL)
+	{
+		temp = ft_strjoin(paths[i], "/");
+		full_path = ft_strjoin(temp, name);
+		free(temp);
+		if (!access(full_path, F_OK))
+		{
+			free(paths);
+			return (full_path);
+		}
+		free(full_path);
+		i++;
+	}
+	free(paths);
+	return NULL;
+}
+
+int	is_executable(t_token *token)
+{
+	char	*name;
+	t_list	*path_list;
+	t_env	*path_env;
+	char	*name_and_path;
+
+	name = token->value;
+	if (ft_strchr(name, '/'))
+		return (TRUE);
+	else
+	{
+		path_list = find_element_by_key(singleton->env, "PATH");
+		if (!path_list)
+			return (FALSE);
+		path_env = path_list->content;
+		printf("path_env->value: %s\n", path_env->value);
+		name_and_path = get_path_to_bin(name, path_env->value);
+		if (name_and_path)
+		{
+			printf("name_and_path: %s\n", name_and_path);
+			return (TRUE);
+		}
+	}
+
+	return FALSE;
+}
+
 t_token *handle_command_token(t_op *base, t_token *token)
 {
 	token = handle_redirection_tokens(base, token);
@@ -35,7 +89,8 @@ t_token *handle_command_token(t_op *base, t_token *token)
 	}
 	else if (token && !strcmp(token->value, "exit"))
 		token->type = EXIT_TYPE;
-	else if (token && ft_strchr(token->value, '/'))
+//	else if (token && ft_strchr(token->value, '/'))
+	else if (token && is_executable(token))
 		token->type = EXEC_TYPE;
 	else
 	{
