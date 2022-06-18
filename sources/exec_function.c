@@ -1,57 +1,50 @@
 #include "minishell.h"
 
 
-int	get_list_length(t_token *list_head)
+int	get_num_of_args(t_token *list_head)
 {
 	int		len;
-	t_token	*temp;
+	t_token	*tmp;
 
-	temp = list_head;
+	tmp = list_head;
 	len = 0;
-	while (temp)
+	while (tmp && tmp->type != PIPE)
 	{
-		len++;
-		temp = temp->next;
+		if (tmp->type == COMMAND_ARG_TYPE || tmp->type == EXEC_TYPE)
+			len++;
+		tmp = tmp->next;
 	}
 	return (len);
 }
 
-char **save_list_values_to_array(t_token *list_head)
+char **get_argv(t_token *args_tokens)
 {
-	char	**result_array;
+	char	**args_array;
 	int		array_len;
 	int		i;
 
-	array_len = get_list_length(list_head);
-//	result_array = malloc(sizeof(char *) * (array_len + 1));
-//	ft_memset(result_array, NULL, array_len);
-	result_array = ft_memalloc(array_len);
-	ft_bzero(result_array, array_len);
+	array_len = get_num_of_args(args_tokens);
+	args_array = ft_memalloc(sizeof(char *) * (array_len + 2));
 	i = 0;
-	while(list_head->value)
+	while(args_tokens && args_tokens->value && args_tokens->type != PIPE)
 	{
-		result_array[i] = ft_strdup(list_head->value);
-		list_head = list_head->next;
+		if (args_tokens->type == COMMAND_ARG_TYPE
+			|| args_tokens->type == EXEC_TYPE)
+			args_array[i++] = args_tokens->value;
+		args_tokens = args_tokens->next;
 	}
-		result_array[i];
-	return (result_array);
+	return (args_array);
 }
 
 void exec_function(t_op *op)
 {
-	char	*file;
-	char	**file_args;
-	char	*args;
-	char	*args2;
+	char	*bin_path;
+	char	**argv;
 
-	printf("hello");
-	file = op->command->value;
-	file_args = save_list_values_to_array(op->command->next);
-//	args = op->command->next->value;
-//	args2 = op->command->next->next->value;
-	printf("arg: %s\n", file);
-	printf("arg: %s\n", *file_args);
-//	printf("arg: %s\n", args2);
-
-	execve(file, file_args, singleton->envp_chars);
+	if (op->output)
+		dup2(op->out, 1);
+	bin_path = op->command->value;
+	argv = get_argv(op->command);
+	execve(bin_path, argv, singleton->envp_chars);
+	free(argv);
 }

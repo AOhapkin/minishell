@@ -54,10 +54,8 @@ int	is_executable(t_token *token)
 		path_to_bin = get_path_to_bin(token->value, path_env->value);
 		if (path_to_bin)
 		{
-			printf("name_and_path: %s\n", path_to_bin);
 			free(token->value);
 			token->value = path_to_bin;
-			printf("token->value: %s\n", token->value);
 			return (TRUE);
 		}
 	}

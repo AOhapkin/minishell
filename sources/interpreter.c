@@ -55,14 +55,14 @@ int is_redirectable_op(t_op *op)
 {
 	char op_type;
 	op_type = op->command->type;
-	return op_type == ECHO_TYPE
-			|| op_type == ENV_CHAR
-			|| (op_type = EXPORT_TYPE && op->is_contain_args == FALSE);
+	return (op_type == ECHO_TYPE && op->out != STDOUT_FILENO)
+			|| op_type == EXEC_TYPE
+			|| (op_type == EXPORT_TYPE && op->is_contain_args == FALSE && op->out != STDOUT_FILENO);
 }
 
 void no_pipes_execution(t_op *op)
 {
-	if (op->out && is_redirectable_op(op))
+	if (is_redirectable_op(op))
 		handle_pipes(op);
 	else
 		op->function(op);
