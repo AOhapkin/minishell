@@ -76,6 +76,11 @@ t_token *handle_command_token(t_op *base, t_token *token)
 		token->type = EXPORT_TYPE;
 		base->function = export_function;
 	}
+	else if (token && !strcmp(token->value, "cd"))
+	{
+		token->type = CD_TYPE;
+		base->function = cd_function;
+	}
 	else if (token && !strcmp(token->value, "env"))
 	{
 		token->type = ENV_TYPE;

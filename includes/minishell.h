@@ -35,8 +35,9 @@
 # define EXPORT_TYPE 4
 # define ENV_TYPE 5
 # define UNSET_TYPE 6
+# define CD_TYPE 7
 # define PWD_TYPE 8
-# define NUM_OF_COMMANDS 4
+# define NUM_OF_COMMANDS 8
 
 /**
  * Flags
@@ -158,13 +159,12 @@ void	delete_list_element_by_name(t_list **list, const char *param_name);
 t_env	**list_to_array(t_list *list);
 void	print_sorted_list(t_list *list_head);
 
-// export
-
 int		ft_strcmp(const char *s1, const char *s2);
 void	export_function(t_op *op);
 void	env_function(t_op *op);
 void	unset_function(t_op *op);
 void	pwd_function(t_op *op);
 void	exec_function(t_op *op);
+void	cd_function(t_op *operation);
 
 #endif
