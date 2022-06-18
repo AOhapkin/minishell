@@ -24,9 +24,9 @@ char **get_argv(t_token *args_tokens)
 	int		i;
 
 	array_len = get_num_of_args(args_tokens);
-	args_array = ft_memalloc(sizeof(char *) * (array_len + 2));
+	args_array = ft_memalloc(sizeof(char *) * (array_len + 1));
 	i = 0;
-	while(args_tokens && args_tokens->value && args_tokens->type != PIPE)
+	while(args_tokens && args_tokens->type != PIPE)
 	{
 		if (args_tokens->type == COMMAND_ARG_TYPE
 			|| args_tokens->type == EXEC_TYPE)
