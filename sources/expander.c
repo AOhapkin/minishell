@@ -25,25 +25,25 @@ char *get_path_to_bin(char *name, char *env_path_value)
 		free(temp);
 		if (!access(full_path, F_OK))
 		{
+			//todo чистка каждого элемента массива
 			free(paths);
 			return (full_path);
 		}
 		free(full_path);
 		i++;
 	}
+	//todo чистка каждого элемента массива
 	free(paths);
 	return NULL;
 }
 
 int	is_executable(t_token *token)
 {
-	char	*name;
 	t_list	*path_list;
 	t_env	*path_env;
-	char	*name_and_path;
+	char	*path_to_bin;
 
-	name = token->value;
-	if (ft_strchr(name, '/'))
+	if (ft_strchr(token->value, '/'))
 		return (TRUE);
 	else
 	{
@@ -51,15 +51,16 @@ int	is_executable(t_token *token)
 		if (!path_list)
 			return (FALSE);
 		path_env = path_list->content;
-		printf("path_env->value: %s\n", path_env->value);
-		name_and_path = get_path_to_bin(name, path_env->value);
-		if (name_and_path)
+		path_to_bin = get_path_to_bin(token->value, path_env->value);
+		if (path_to_bin)
 		{
-			printf("name_and_path: %s\n", name_and_path);
+			printf("name_and_path: %s\n", path_to_bin);
+			free(token->value);
+			token->value = path_to_bin;
+			printf("token->value: %s\n", token->value);
 			return (TRUE);
 		}
 	}
-
 	return FALSE;
 }
 
@@ -89,9 +90,11 @@ t_token *handle_command_token(t_op *base, t_token *token)
 	}
 	else if (token && !strcmp(token->value, "exit"))
 		token->type = EXIT_TYPE;
-//	else if (token && ft_strchr(token->value, '/'))
 	else if (token && is_executable(token))
+	{
 		token->type = EXEC_TYPE;
+		base->function = exec_function;
+	}
 	else
 	{
 		printf("minishell : %s: command not found\n", token->value ? token->value : "newline");

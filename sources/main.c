@@ -14,6 +14,7 @@ void	init_singleton(char **envp)
 {
 	singleton = ft_memalloc(sizeof(t_glob));
 	singleton->env = save_envp_to_list(envp);
+	singleton->envp_chars = envp;
 }
 
 void print_real_envp(char **envp)

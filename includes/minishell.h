@@ -143,7 +143,8 @@ void	sort_t_env_array(t_env **array, int array_size);
 
 typedef struct s_glob
 {
-	t_list *env;
+	t_list	*env;
+	char	**envp_chars;
 }	t_glob;
 
 t_glob	*singleton;
@@ -162,5 +163,6 @@ int		ft_strcmp(const char *s1, const char *s2);
 void	export_function(t_op *op);
 void	env_function(t_op *op);
 void	unset_function(t_op *op);
+void	exec_function(t_op *op);
 
 #endif
