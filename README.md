@@ -116,3 +116,7 @@
           - переменные не появляются после выполнения cd
         - [x] если удалить HOME, команда cd без пути не работает
           - `-bash: cd: HOME not set`
+
+# todo
+
+- [ ] Return values of a process `$?`

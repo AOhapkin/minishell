@@ -7,7 +7,8 @@ void print_env(void *env)
 
 	key = ((t_env*)env)->key;
 	value = ((t_env*)env)->value;
-	printf("%s=%s\n", key, value);
+	if (value)
+		printf("%s=%s\n", key, value);
 }
 
 t_list	*save_envp_to_list(char **envp)
