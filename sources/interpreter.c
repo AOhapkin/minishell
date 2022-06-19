@@ -71,8 +71,6 @@ void no_pipes_execution(t_op *op)
 
 void interpreter(t_op *parent)
 {
-	if (parent->command->type == EXIT_TYPE)
-		exit(0);
 	if (parent->child)
 		handle_pipes(parent);
 	else

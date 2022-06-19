@@ -78,4 +78,5 @@ add_executable(minishell
         sources/unset_function.c
         sources/pwd_function.c
         sources/env_function.c
+        sources/exit_function.c
         sources/exec_function.c)

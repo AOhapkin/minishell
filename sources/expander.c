@@ -97,7 +97,10 @@ t_token *handle_command_token(t_op *base, t_token *token)
 		base->function = pwd_function;
 	}
 	else if (token && !strcmp(token->value, "exit"))
+	{
 		token->type = EXIT_TYPE;
+		base->function = exit_function;
+	}
 	else if (token && is_executable(token))
 	{
 		token->type = EXEC_TYPE;

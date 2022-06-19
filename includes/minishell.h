@@ -166,5 +166,6 @@ void	unset_function(t_op *op);
 void	pwd_function(t_op *op);
 void	exec_function(t_op *op);
 void	cd_function(t_op *operation);
+void	exit_function(t_op *op);
 
 #endif
