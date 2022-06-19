@@ -151,6 +151,8 @@ t_op *expand(t_token *token)
 	t_op *op;
 	t_op *parent;
 
+	if (!token)
+		return NULL;
 	op = ft_memalloc(sizeof(t_op));
 	op->in = STDIN_FILENO;
 	op->out = STDOUT_FILENO;
