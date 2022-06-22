@@ -1,11 +1,20 @@
 #include "minishell.h"
 
 
-void run_child_process(int fd[2], t_op *child)
+void run_child_process(int fd[2], t_op *child, t_op *parent)
 {
+	char *input_string;
+
+	if (parent->input && parent->input->type == HERE_DOCUMENTS)
+	{
+		input_string = parent->input->next->value;
+		write(fd[1], input_string, ft_strlen(input_string));
+		close(fd[1]);
+	}
+	else
+		dup2(fd[1], 1);
 	if (child)
 	{
-		dup2(fd[1], 1);
 		close(fd[0]);
 		close(fd[1]);
 		handle_pipes(child);
@@ -34,7 +43,7 @@ void handle_pipes(t_op *parent)
 	{
 		pid1 = fork();
 		if (pid1 == 0)
-			run_child_process(fd, parent->child);
+			run_child_process(fd, parent->child, parent);
 		pid2 = fork();
 		if (pid2 == 0)
 			run_parent_process(fd, parent);

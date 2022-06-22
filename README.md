@@ -144,6 +144,7 @@
 
 ****
 
+- [z] `grep a << b`
 - [ ] `grep a << b | grep с`
     - проверять нужно вводя то, что поймает `grep a`
 - [ ] `echo "aaaaaaaa" | grep a << b | grep c`
@@ -151,4 +152,7 @@
 - [ ] `echo "aaaaaaaa" | grep с | grep a << b`
   - проверять нужно вводя то, что поймает `grep a`
 
+![img.png](img.png)
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
 ****
