@@ -114,9 +114,7 @@ typedef struct s_base
 {
 	t_token *command;
 	t_token *input;
-	int in;
 	t_token *output;
-	int out;
 	int is_contain_args;
 	int is_contain_flag;
 	struct s_base *child;

@@ -157,8 +157,6 @@ t_op *expand(t_token *token)
 	if (!token)
 		return NULL;
 	op = ft_memalloc(sizeof(t_op));
-	op->in = STDIN_FILENO;
-	op->out = STDOUT_FILENO;
 	op->is_valid = TRUE;
 
 	token = handle_command_token(op, token);

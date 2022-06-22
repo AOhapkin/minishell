@@ -5,8 +5,6 @@ void echo_function(t_op *op)
 	t_token *arg;
 	int is_first;
 
-	if (op->output)
-		dup2(op->out, 1);
 	arg = op->command->next;
 	is_first = TRUE;
 	while (arg && strcmp(arg->value, "|"))

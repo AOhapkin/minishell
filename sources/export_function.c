@@ -49,11 +49,7 @@ void	export_function(t_op *op)
 	t_token	*args;
 
 	if (op->is_contain_args == FALSE)
-	{
-		if (op->out != STDOUT_FILENO)
-			dup2(op->out, 1);
 		print_sorted_list(singleton->env);
-	}
 	else
 	{
 		args = op->command->next;
