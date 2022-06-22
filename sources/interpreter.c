@@ -8,10 +8,7 @@ void run_child_process(int fd[2], t_op *child)
 		dup2(fd[1], 1);
 		close(fd[0]);
 		close(fd[1]);
-		if (child->child)
-			handle_pipes(child);
-		else
-			child->function(child);
+		handle_pipes(child);
 	}
 	exit(0);
 }
@@ -29,7 +26,6 @@ void run_parent_process(int fd[2], t_op *parent)
 
 void handle_pipes(t_op *parent)
 {
-
 	int		fd[2];
 	pid_t	pid1;
 	pid_t	pid2;
