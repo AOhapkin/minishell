@@ -22,7 +22,10 @@ int	open_out(t_op *base, t_token *token)
 			printf("minishell : syntax error near unexpected token `%s'\n", arg ? arg->value : "newline");
 			return SKIP;
 		}
-		token->type = REDIRECT_OUTPUT;
+		if (!ft_strcmp(token->value, ">"))
+			token->type = REDIRECT_OUTPUT;
+		else
+			token->type = APPENDING_REDIRECTED_OUTPUT;
 		base->output = token;
 		arg->type = REDIRECT_ARG_TYPE;
 		return NOT_SKIP;
