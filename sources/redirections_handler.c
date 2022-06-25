@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void handle_here_documents(int fd[2], t_op *op)
+void handle_here_documents(t_op *op)
 {
 	int input_pipe_fd[2];
 	char *input_buff;
@@ -47,7 +47,7 @@ void handle_output_to_file(int fd[2], t_op *op)
 void handle_child_redirections(int fd[2], t_op *op)
 {
 	if (op->input && op->input->type == HERE_DOCUMENTS)
-		handle_here_documents(fd, op);
+		handle_here_documents(op);
 	else if (op->input && op->input->type == REDIRECT_INPUT)
 	{
 		handle_input_from_file(fd, op);
@@ -61,7 +61,7 @@ void handle_child_redirections(int fd[2], t_op *op)
 void handle_parent_redirections(int fd[2], t_op *op)
 {
 	if (op->input && op->input->type == HERE_DOCUMENTS)
-		handle_here_documents(fd, op);
+		handle_here_documents(op);
 	else
 	{
 		if (op->input && op->input->type == REDIRECT_INPUT)
