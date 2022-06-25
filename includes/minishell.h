@@ -166,4 +166,7 @@ void	exec_function(t_op *op);
 void	cd_function(t_op *operation);
 void	exit_function(t_op *op);
 
+void	handle_child_redirections(int fd[2], t_op *op);
+void	handle_parent_redirections(int fd[2], t_op *op);
+
 #endif

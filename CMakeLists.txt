@@ -79,4 +79,5 @@ add_executable(minishell
         sources/pwd_function.c
         sources/env_function.c
         sources/exit_function.c
+        sources/redirections_handler.c
         sources/exec_function.c)
