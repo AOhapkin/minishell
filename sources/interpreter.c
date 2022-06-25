@@ -28,6 +28,7 @@ void run_parent_process(int fd[2], t_op *op)
 	exit(0);
 }
 
+
 void handle_pipes(t_op *parent)
 {
 	int fd[2];
@@ -42,10 +43,8 @@ void handle_pipes(t_op *parent)
 		pid2 = fork();
 		if (pid2 == 0)
 			run_parent_process(fd, parent);
-		if (fd[0] != STDOUT_FILENO && fd[0] != STDIN_FILENO)
-			close(fd[0]);
-		if (fd[1] != STDOUT_FILENO && fd[1] != STDIN_FILENO)
-			close(fd[1]);
+		close(fd[0]);
+		close(fd[1]);
 		waitpid(pid1, NULL, 0);
 		waitpid(pid2, NULL, 0);
 	}
