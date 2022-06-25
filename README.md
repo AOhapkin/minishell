@@ -152,7 +152,12 @@
 - [ ] `echo "aaaaaaaa" | grep с | grep a << b`
   - проверять нужно вводя то, что поймает `grep a`
 
-![img.png](img.png)
-![img_1.png](img_1.png)
-![img_2.png](img_2.png)
+![img_5.png](img_5.png)
+![img_3.png](img_3.png)
+![img_6.png](img_6.png)
+- [ ] `echo lo | cat | grep l | grep n`
+- [ ] `echo loh | grep l <<a`
+- [ ] `cat test.txt | grep l >> test.txt`
+
+- [ ] `echo lo | cat | grep l | grep l`
 ****

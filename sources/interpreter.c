@@ -1,34 +1,111 @@
 #include "minishell.h"
 
-
-void run_child_process(int fd[2], t_op *child, t_op *parent)
+void run_child_process(int fd[2], t_op *op)
 {
-	char *input_string;
+	int		input_pipe_fd[2];
+	char	*input_buff;
+	char	*input_file;
+	int		input_fd;
+	char	*out_file;
+	int		out_fd;
 
-	if (parent->input && parent->input->type == HERE_DOCUMENTS)
+	out_fd = 1;
+	input_fd = 0;
+	if (op && op->child)
 	{
-		input_string = parent->input->next->value;
-		write(fd[1], input_string, ft_strlen(input_string));
-		close(fd[1]);
-	}
-	else
 		dup2(fd[1], 1);
-	if (child)
-	{
 		close(fd[0]);
 		close(fd[1]);
-		handle_pipes(child);
+		handle_pipes(op);
+	} else if (op)
+	{
+		input_fd = 0;
+		if (op->input && op->input->type == HERE_DOCUMENTS)
+		{
+			pipe(input_pipe_fd);
+			input_buff = op->input->next->value;
+			dup2(input_pipe_fd[0], 0);
+			write(input_pipe_fd[1], input_buff, ft_strlen(input_buff));
+			close(input_pipe_fd[0]);
+			close(input_pipe_fd[1]);
+		}
+		else if (op->input && op->input->type == REDIRECT_INPUT)
+		{
+			input_file = op->input->next->value;
+			input_fd = open(input_file, O_RDONLY);
+			dup2(input_fd, 0);
+		}
+		if (op->output)
+		{
+			out_file = op->output->next->value;
+			if (op->output->type == REDIRECT_OUTPUT)
+				out_fd = open(out_file, O_RDWR | O_CREAT | O_TRUNC, 0644);
+			else
+				out_fd = open(out_file, O_RDWR | O_CREAT | O_APPEND, 0644);
+			dup2(out_fd, 1);
+		}
+		else
+			dup2(fd[1], 1);
+		close(fd[0]);
+		close(fd[1]);
+		op->function(op);
+		if (out_fd != 1)
+			close(out_fd);
+		if (input_fd != 0)
+			close(input_fd);
 	}
 	exit(0);
 }
 
 
-void run_parent_process(int fd[2], t_op *parent)
+void run_parent_process(int fd[2], t_op *op)
 {
-	dup2(fd[0], 0);
+	int		input_pipe_fd[2];
+	char	*input_buff;
+	char	*input_file;
+	int		input_fd;
+	char	*out_file;
+	int		out_fd;
+
+	out_fd = 1;
+	input_fd = 0;
+	if (op->input && op->input->type == HERE_DOCUMENTS)
+	{
+		pipe(input_pipe_fd);
+		input_buff = op->input->next->value;
+		dup2(input_pipe_fd[0], 0);
+		write(input_pipe_fd[1], input_buff, ft_strlen(input_buff));
+		close(input_pipe_fd[0]);
+		close(input_pipe_fd[1]);
+	}
+	else if (op->input && op->input->type == REDIRECT_INPUT)
+	{
+		input_file = op->input->next->value;
+		input_fd = open(input_file, O_RDONLY);
+		// todo нужна проверка на открываемость
+		if (input_fd < 0)
+			exit(100500);
+		dup2(input_fd, 0);
+	}
+	else
+		dup2(fd[0], 0);
+	if (op->output)
+	{
+		out_file = op->output->next->value;
+		if (op->output->type == REDIRECT_OUTPUT)
+			out_fd = open(out_file, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		else
+			out_fd = open(out_file, O_RDWR | O_CREAT | O_APPEND, 0644);
+		dup2(out_fd, 1);
+	}
+
 	close(fd[0]);
 	close(fd[1]);
-	parent->function(parent);
+	op->function(op);
+	if (out_fd != 1)
+		close(out_fd);
+	if (input_fd != 0)
+		close(input_fd);
 	exit(0);
 }
 
@@ -43,7 +120,7 @@ void handle_pipes(t_op *parent)
 	{
 		pid1 = fork();
 		if (pid1 == 0)
-			run_child_process(fd, parent->child, parent);
+			run_child_process(fd, parent->child);
 		pid2 = fork();
 		if (pid2 == 0)
 			run_parent_process(fd, parent);

@@ -153,6 +153,7 @@ t_op *expand(t_token *token)
 {
 	t_op *op;
 	t_op *parent;
+	t_op *tmp;
 
 	if (!token)
 		return NULL;
@@ -162,23 +163,20 @@ t_op *expand(t_token *token)
 	token = handle_command_token(op, token);
 	token = handle_flag_tokens(op, token);
 	token = handle_argument_tokens(op, token);
-	if (op->is_valid == FALSE)
-	{
-		free(op);
-		return NULL;
-	}
-	if (token && !strcmp(token->value, "|") && token->next)
+	if (op->is_valid == TRUE
+		&& token
+		&& !strcmp(token->value, "|")
+		&& token->next)
 	{
 		token->type = PIPE;
 		parent = expand(token->next);
-		if (parent == NULL || parent->is_valid == FALSE)
-		{
-			free(op);
-			return NULL;
-		}
-		parent->child = op;
+		if (!parent)
+			return op;
+		tmp = parent;
+		while (tmp->child)
+			tmp = tmp->child;
+		tmp->child = op;
 		return parent;
 	}
-	else
-		return op;
+	return op;
 }
