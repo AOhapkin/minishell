@@ -9,6 +9,19 @@ t_token *handle_redirection_tokens(t_op *base, t_token *token)
 	return token;
 }
 
+free_paths_array(char **paths)
+{
+	char **tmp;
+
+	tmp = paths;
+	while (*tmp)
+	{
+		free(*tmp);
+		tmp++;
+	}
+	free(paths);
+}
+
 char *get_path_to_bin(char *name, char *env_path_value)
 {
 	char **paths;
@@ -25,15 +38,13 @@ char *get_path_to_bin(char *name, char *env_path_value)
 		free(temp);
 		if (!access(full_path, F_OK))
 		{
-			//todo чистка каждого элемента массива
-			free(paths);
+			free_paths_array(paths);
 			return (full_path);
 		}
 		free(full_path);
 		i++;
 	}
-	//todo чистка каждого элемента массива
-	free(paths);
+	free_paths_array(paths);
 	return NULL;
 }
 
@@ -109,6 +120,7 @@ t_token *handle_command_token(t_op *base, t_token *token)
 	else
 	{
 		printf("minishell : %s: command not found\n", token->value ? token->value : "newline");
+		singleton->last_exit_status = 127;
 		base->is_valid = FALSE;
 		return NULL;
 	}

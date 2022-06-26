@@ -1,3 +1,4 @@
+#include <errno.h>
 #include "minishell.h"
 
 void update_pwd()
@@ -74,7 +75,6 @@ void go_to_oldpwd()
 		return ;
 	}
 	chdir(oldpwd_path);
-	update_pwd();
 	singleton->last_exit_status = 0;
 }
 
@@ -91,6 +91,7 @@ void	cd_function(t_op *operation)
 		if (!ft_strcmp(path, "-"))
 		{
 			go_to_oldpwd();
+			update_pwd();
 			return ;
 		}
 		if (chdir(path) == 0) // переход в папку
@@ -99,9 +100,7 @@ void	cd_function(t_op *operation)
 			singleton->last_exit_status = 0;
 			return ;
 		}
-		printf("minishell > cd: %s: No such file or directory\n", path);
+		printf("minishell > cd: %s: %s\n", path, strerror(errno));
 		singleton->last_exit_status = 1;
 	}
-	else
-		singleton->last_exit_status = 1;
 }

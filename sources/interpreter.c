@@ -65,14 +65,17 @@ void no_pipes_execution(t_op *op)
 	if (is_redirectable_op(op))
 		handle_pipes(op);
 	else
+	{
+		handle_single_redirection(op);
 		op->function(op);
+	}
 }
 
 void interpreter(t_op *parent)
 {
-//	if (parent->child)
-//		handle_pipes(parent);
-//	else
-//		no_pipes_execution(parent);
-	parent->function(parent);
+	if (parent->child)
+		handle_pipes(parent);
+	else
+		no_pipes_execution(parent);
+	singleton_handle_errors();
 }

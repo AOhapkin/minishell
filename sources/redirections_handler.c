@@ -1,3 +1,4 @@
+#include <errno.h>
 #include "minishell.h"
 
 void handle_here_documents(t_op *op)
@@ -20,11 +21,13 @@ void handle_input_from_file(int fd[2], t_op *op)
 
 	input_file = op->input->next->value;
 	input_fd = open(input_file, O_RDONLY);
-	// todo нужна проверка на открываемость
-	if (input_fd < 0)
-		exit(100500);
-	close(fd[0]);
-	fd[0] = input_fd;
+	if (input_fd == -1)
+		printf("-minishell: %s: %s\n", input_file, strerror(errno));
+	else
+	{
+		close(fd[0]);
+		fd[0] = input_fd;
+	}
 }
 
 void handle_output_to_file(int fd[2], t_op *op)
@@ -37,11 +40,13 @@ void handle_output_to_file(int fd[2], t_op *op)
 		out_fd = open(out_file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	else
 		out_fd = open(out_file, O_RDWR | O_CREAT | O_APPEND, 0644);
-	// todo обработать ошибку
-	if (out_fd < 0)
-		exit(100500);
-	close(fd[1]);
-	fd[1] = out_fd;
+	if (out_fd == -1)
+		printf("-minishell: %s: %s\n", out_file, strerror(errno));
+	else
+	{
+		close(fd[1]);
+		fd[1] = out_fd;
+	}
 }
 
 void handle_child_redirections(int fd[2], t_op *op)
@@ -73,4 +78,43 @@ void handle_parent_redirections(int fd[2], t_op *op)
 		handle_output_to_file(fd, op);
 		dup2(fd[1], 1);
 	}
+}
+
+void handle_input_from_file_single(t_op *op)
+{
+	char *input_file;
+	int input_fd;
+
+	input_file = op->input->next->value;
+	input_fd = open(input_file, O_RDONLY);
+	if (input_fd == -1)
+		printf("-minishell: %s: %s\n", input_file, strerror(errno));
+	else
+		close(input_fd);
+}
+
+void handle_output_to_file_single(t_op *op)
+{
+	char *out_file;
+	int out_fd;
+
+	out_file = op->output->next->value;
+	if (op->output->type == REDIRECT_OUTPUT)
+		out_fd = open(out_file, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	else
+		out_fd = open(out_file, O_RDWR | O_CREAT | O_APPEND, 0644);
+	if (out_fd == -1)
+		printf("-minishell: %s: %s\n", out_file, strerror(errno));
+	else
+		close(out_fd);
+}
+
+void handle_single_redirection(t_op *op)
+{
+	if (op->input && op->input->type == HERE_DOCUMENTS)
+		handle_here_documents(op);
+	else if (op->input)
+		handle_input_from_file_single(op);
+	if (op->output)
+		handle_output_to_file_single(op);
 }

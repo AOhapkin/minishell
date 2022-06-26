@@ -7,6 +7,7 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <fcntl.h>
+#include <errno.h>
 # include "libft.h"
 
 # define PROMPT "minishell > "
@@ -58,6 +59,8 @@
 # define REDIRECT_INPUT 33 // <
 # define HERE_DOCUMENTS 34 // <<
 # define PIPE 40 // |
+
+# define WEXITSTATUS(status) (((status) & 0xff00) >> 8)
 
 typedef struct s_env
 {
@@ -145,7 +148,7 @@ typedef struct s_glob
 {
 	t_list	*env;
 	char	**envp_chars;
-	int		last_exit_status;
+	int 	last_exit_status;
 	int		is_exit;
 }	t_glob;
 
@@ -170,5 +173,9 @@ void	exit_function(t_op *op);
 
 void	handle_child_redirections(int fd[2], t_op *op);
 void	handle_parent_redirections(int fd[2], t_op *op);
+void	handle_single_redirection(t_op *op);
+void	singleton_handle_errors();
+//void	set_err_code(int err_code);
+//int		get_err_code(void);
 
 #endif
