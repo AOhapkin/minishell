@@ -171,5 +171,7 @@ void	exit_function(t_op *op);
 
 void	handle_child_redirections(int fd[2], t_op *op);
 void	handle_parent_redirections(int fd[2], t_op *op);
+void	handle_single_redirection(t_op *op);
+void	singleton_handle_errors();
 
 #endif

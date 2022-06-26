@@ -1,3 +1,4 @@
+#include <errno.h>
 #include "minishell.h"
 
 void update_pwd()

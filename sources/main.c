@@ -44,6 +44,13 @@ int main(int argc, char **argv, char **envp)
 	return (singleton->last_exit_status);
 }
 
+void singleton_handle_errors()
+{
+	singleton->last_exit_status;
+}
+
+
+
 //int	main(int argc, char **argv, char **envp)
 //{
 //	t_list *arguments;
@@ -56,3 +63,5 @@ int main(int argc, char **argv, char **envp)
 //	print_sorted_list(singleton->g_env);
 //	return (0);
 //}
+
+
