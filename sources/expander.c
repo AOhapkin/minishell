@@ -120,6 +120,7 @@ t_token *handle_command_token(t_op *base, t_token *token)
 	else
 	{
 		printf("minishell : %s: command not found\n", token->value ? token->value : "newline");
+		singleton->last_exit_status = 127;
 		base->is_valid = FALSE;
 		return NULL;
 	}

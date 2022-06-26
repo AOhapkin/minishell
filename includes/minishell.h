@@ -146,7 +146,7 @@ typedef struct s_glob
 {
 	t_list	*env;
 	char	**envp_chars;
-	char	last_exit_status;
+	int 	last_exit_status;
 	int		is_exit;
 }	t_glob;
 
@@ -173,5 +173,7 @@ void	handle_child_redirections(int fd[2], t_op *op);
 void	handle_parent_redirections(int fd[2], t_op *op);
 void	handle_single_redirection(t_op *op);
 void	singleton_handle_errors();
+//void	set_err_code(int err_code);
+//int		get_err_code(void);
 
 #endif
