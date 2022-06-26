@@ -37,11 +37,28 @@ int handle_env_char(t_lexer *lexer)
 		return SKIP;
 }
 
+char get_redir_type(char *value)
+{
+	if (!ft_strcmp("<", value))
+		return REDIRECT_INPUT;
+	else if (!ft_strcmp(">", value))
+		return REDIRECT_OUTPUT;
+	else if (!ft_strcmp(">>", value))
+		return APPENDING_REDIRECTED_OUTPUT;
+	else if (!ft_strcmp("<<", value))
+		return HERE_DOCUMENTS;
+	else if (!ft_strcmp("|", value))
+		return PIPE;
+	return 0;
+}
+
 /**
  * Обработка символов перенаправления ввода/вывода
  */
 int handle_redirect(t_lexer *lexer)
 {
+	t_token *token;
+
 	if (ft_strchr(REDIRECTIONS_CHARS, *lexer->buffer)
 		&& !lexer->quote)
 	{
@@ -50,7 +67,31 @@ int handle_redirect(t_lexer *lexer)
 			lexer->buffer += 2;
 		else
 			lexer->buffer += 1;
+		token = lexer_add_token(lexer);
+		token->type = get_redir_type(token->value);
+		return NOT_SKIP;
+	}
+	else
+		return SKIP;
+}
+
+/**
+ * Обработка символов перенаправления ввода/вывода
+ */
+int handle_pipe(t_lexer *lexer)
+{
+	t_token *token;
+
+	if (ft_strchr(REDIRECTIONS_CHARS, *lexer->buffer)
+		&& !lexer->quote)
+	{
 		lexer_add_token(lexer);
+		if (!ft_strncmp(lexer->buffer, "<<", 2) || !ft_strncmp(lexer->buffer, ">>", 2))
+			lexer->buffer += 2;
+		else
+			lexer->buffer += 1;
+		token = lexer_add_token(lexer);
+		token->type = get_redir_type(token->value);
 		return NOT_SKIP;
 	}
 	else

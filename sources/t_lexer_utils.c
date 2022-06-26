@@ -43,15 +43,22 @@ void lexer_update_value_and_quote(t_lexer *lexer, char quote)
 }
 
 /**
- * Скидывает накопившееся между from и buffer в value,ё
+ * Скидывает накопившееся между from и buffer в value,
  * из value делает токен и кладет его в конец списка.
  */
-void lexer_add_token(t_lexer *lexer)
+t_token *lexer_add_token(t_lexer *lexer)
 {
+	t_token *new;
+
+	new = NULL;
 	lexer_update_value_and_quote(lexer, 0);
 	if (lexer->value)
-		push_token_back(&(lexer->tokens), new_token(lexer->value));
+	{
+		new = new_token(lexer->value);
+		push_token_back(&(lexer->tokens), new);
+	}
 	lexer->value = NULL;
+	return new;
 }
 
 char *get_env_name(char *buffer)
@@ -85,7 +92,7 @@ void lexer_add_env_to_value_and_skip_name(t_lexer *lexer)
 	if (*(lexer->buffer) == '?')
 	{
 		env_name = ft_strdup("?");
-		lexer->value = join_and_free_srcs(lexer->value, ft_itoa(WEXITSTATUS(singleton->last_exit_status)));
+		lexer->value = join_and_free_srcs(lexer->value, ft_itoa(singleton->last_exit_status));
 	}
 	else
 	{
