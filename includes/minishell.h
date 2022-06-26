@@ -100,7 +100,7 @@ typedef struct s_lexer
 t_token *lexer(char *buffer);
 void lexer_init(t_lexer *lexer, char *buffer);
 void lexer_update_value_and_quote(t_lexer *lexer, char quote);
-void lexer_add_token(t_lexer *lexer);
+t_token *lexer_add_token(t_lexer *lexer);
 void lexer_add_env_to_value_and_skip_name(t_lexer *lexer);
 // handlers
 int handle_quotes(t_lexer *lexer);
@@ -126,6 +126,8 @@ typedef struct s_base
 t_op *expand(t_token *token);
 void handle_pipes(t_op *parent);
 void interpreter(t_op *parent);
+t_token *handle_unexpected_token(t_op *base, t_token *token);
+
 
 void echo_function(t_op *op);
 
@@ -134,8 +136,8 @@ char *read_from_input();
 char *read_from_input_and_join_with_previous(char *prev);
 
 
-int	open_out(t_op *base, t_token *token);
-int	open_in(t_op *base, t_token *token);
+int	expand_output_redirection(t_op *base, t_token *token);
+int	expand_input_redirection(t_op *base, t_token *token);
 
 void	print_t_env_array(t_env **array);
 void	sort_t_env_array(t_env **array, int array_size);

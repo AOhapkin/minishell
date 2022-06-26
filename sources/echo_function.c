@@ -7,7 +7,7 @@ void echo_function(t_op *op)
 
 	arg = op->command->next;
 	is_first = TRUE;
-	while (arg && strcmp(arg->value, "|"))
+	while (arg && arg->type != PIPE)
 	{
 		if (arg->type == COMMAND_ARG_TYPE)
 		{

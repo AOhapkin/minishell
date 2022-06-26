@@ -1,31 +1,28 @@
 #include "minishell.h"
 
-int is_redirection_operator_ish(t_token *token)
+int is_redirection_type(char type)
 {
-	return !strcmp(token->value, ">>")
-		   || !strcmp(token->value, ">")
-		   || !strcmp(token->value, "<<")
-		   || !strcmp(token->value, "<");
+	return type == REDIRECT_INPUT
+		   || type == HERE_DOCUMENTS
+		   || type == APPENDING_REDIRECTED_OUTPUT
+		   || type == REDIRECT_OUTPUT;
 }
 
-int	open_out(t_op *base, t_token *token)
+int	expand_output_redirection(t_op *base, t_token *token)
 {
 	t_token *arg;
 
-	if (!strcmp(token->value, ">")
-		|| !strcmp(token->value, ">>"))
+	if (token->type == REDIRECT_OUTPUT || token->type == APPENDING_REDIRECTED_OUTPUT)
 	{
 		arg = token->next;
-		if (!arg || is_redirection_operator_ish(arg) || !strcmp(arg->value, "|"))
+		if (!arg || arg->type == PIPE || is_redirection_type(arg->type))
 		{
-			base->is_valid = FALSE;
-			printf("minishell : syntax error near unexpected token `%s'\n", arg ? arg->value : "newline");
+//			base->is_valid = FALSE;
+//			printf("minishell : syntax error near unexpected token `%s'\n", arg ? arg->value : "newline");
+//			singleton->last_exit_status = 258;
+			handle_unexpected_token(base, token);
 			return SKIP;
 		}
-		if (!ft_strcmp(token->value, ">"))
-			token->type = REDIRECT_OUTPUT;
-		else
-			token->type = APPENDING_REDIRECTED_OUTPUT;
 		base->output = token;
 		arg->type = REDIRECT_ARG_TYPE;
 		return NOT_SKIP;
@@ -54,28 +51,20 @@ void update_argument_token(t_op *base, t_token *arg)
 	arg->value = result;
 }
 
-int	open_in(t_op *base, t_token *token)
+int	expand_input_redirection(t_op *base, t_token *token)
 {
 	t_token *arg;
 
-	if (!strcmp(token->value, "<")
-		|| !strcmp(token->value, "<<"))
+	if (token->type == REDIRECT_INPUT || token->type == HERE_DOCUMENTS)
 	{
 		arg = token->next;
-		if (!arg || is_redirection_operator_ish(arg) || !strcmp(arg->value, "|"))
+		if (!arg || arg->type == PIPE || is_redirection_type(arg->type))
 		{
-			base->is_valid = FALSE;
-			printf("minishell : syntax error near unexpected token `%s'\n", arg ? arg->value : "newline");
+			handle_unexpected_token;
 			return SKIP;
 		}
-
-		if (!ft_strcmp(token->value, "<"))
-			token->type = REDIRECT_INPUT;
-		else
-		{
+		if (token->type == HERE_DOCUMENTS)
 			update_argument_token(base, arg);
-			token->type = HERE_DOCUMENTS;
-		}
 		base->input = token;
 		arg->type = REDIRECT_ARG_TYPE;
 		return NOT_SKIP;
