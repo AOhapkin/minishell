@@ -72,17 +72,6 @@ char *get_env_name(char *buffer)
 	return NULL;
 }
 
-char *last_exit_status_itoa(int status)
-{
-	int	result;
-
-	if (status > 255)
-		result = status / 255;
-	else
-		result = status;
-	return ft_itoa(result);
-}
-
 /**
  * Добавляет к value значение переменной,
  * инкремент buffer чтобы пропустить имя переменной.
@@ -96,7 +85,7 @@ void lexer_add_env_to_value_and_skip_name(t_lexer *lexer)
 	if (*(lexer->buffer) == '?')
 	{
 		env_name = ft_strdup("?");
-		lexer->value = join_and_free_srcs(lexer->value, last_exit_status_itoa(singleton->last_exit_status));
+		lexer->value = join_and_free_srcs(lexer->value, ft_itoa(WEXITSTATUS(singleton->last_exit_status)));
 	}
 	else
 	{
