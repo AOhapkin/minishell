@@ -45,8 +45,8 @@ void handle_pipes(t_op *parent)
 			run_parent_process(fd, parent);
 		close(fd[0]);
 		close(fd[1]);
-		waitpid(pid1, NULL, 0);
-		waitpid(pid2, NULL, 0);
+		waitpid(pid1, &(singleton->last_exit_status), 0);
+		waitpid(pid2, &(singleton->last_exit_status), 0);
 	}
 }
 
@@ -71,7 +71,8 @@ void no_pipes_execution(t_op *op)
 void interpreter(t_op *parent)
 {
 //	if (parent->child)
-	handle_pipes(parent);
+//		handle_pipes(parent);
 //	else
 //		no_pipes_execution(parent);
+	parent->function(parent);
 }

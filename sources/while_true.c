@@ -60,18 +60,16 @@ void routine(void)
 
 	tokens = NULL;
 	buffer = NULL;
-	while (TRUE)
+	while (singleton->is_exit == FALSE)
 	{
 		buffer = read_from_input();
 		if (!buffer || ft_strlen(buffer) == 0)
 			continue;
 		tokens = lexer(buffer);
 		parent = expand(tokens);
-		if (parent != NULL)
-		{
+		if (parent != NULL && parent->is_valid)
 			interpreter(parent);
-			free_piped_ops(parent);
-		}
+		free_piped_ops(parent);
 //		print_all_tokens(tokens);
 		free_list_of_tokens(tokens);
 		free(buffer);

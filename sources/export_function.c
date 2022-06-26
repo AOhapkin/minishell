@@ -65,4 +65,5 @@ void	export_function(t_op *op)
 		}
 //		print_sorted_list(singleton->env); // оставил чтобы можно было проверить добавление
 	}
+	singleton->last_exit_status = 0;
 }

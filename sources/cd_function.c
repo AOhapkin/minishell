@@ -54,6 +54,30 @@ char *get_home_path()
 	return (home_path);
 }
 
+void go_to_oldpwd()
+{
+	t_list	*env_oldpwd;
+	char	*oldpwd_path;
+
+	env_oldpwd = find_element_by_key(singleton->env, "OLDPWD");
+	if (env_oldpwd == NULL)
+	{
+		printf("cd: OLDPWD not set\n");
+		singleton->last_exit_status = 1;
+		return ;
+	}
+	oldpwd_path = ((t_env *)env_oldpwd->content)->value;
+	if (ft_strlen(oldpwd_path) == 1)
+	{
+		printf("cd: OLDPWD not set\n");
+		singleton->last_exit_status = 1;
+		return ;
+	}
+	chdir(oldpwd_path);
+	update_pwd();
+	singleton->last_exit_status = 0;
+}
+
 void	cd_function(t_op *operation)
 {
 	char	*path;
@@ -64,11 +88,20 @@ void	cd_function(t_op *operation)
 		path = operation->command->next->value;
 	if (path)
 	{
-		if (chdir(path) == 0)
+		if (!ft_strcmp(path, "-"))
+		{
+			go_to_oldpwd();
+			return ;
+		}
+		if (chdir(path) == 0) // переход в папку
 		{
 			update_pwd();
+			singleton->last_exit_status = 0;
 			return ;
 		}
 		printf("minishell > cd: %s: No such file or directory\n", path);
+		singleton->last_exit_status = 1;
 	}
+	else
+		singleton->last_exit_status = 1;
 }

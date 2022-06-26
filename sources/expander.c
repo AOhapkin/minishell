@@ -120,7 +120,7 @@ t_token *handle_flag_tokens(t_op *base, t_token *token)
 	while (base->is_valid && token && !base->is_contain_args && base->command->type == ECHO_TYPE)
 	{
 		token = handle_redirection_tokens(base, token);
-		if (token && !strcmp(token->value, "-n"))
+		if (token && !ft_strcmp(token->value, "-n"))
 		{
 			token->type = ECHO_N_FLAG;
 			base->is_contain_flag = TRUE;
@@ -134,10 +134,10 @@ t_token *handle_flag_tokens(t_op *base, t_token *token)
 
 t_token *handle_argument_tokens(t_op *base, t_token *token)
 {
-	while (base->is_valid && token && strcmp(token->value, "|"))
+	while (base->is_valid && token && ft_strcmp(token->value, "|"))
 	{
 		token = handle_redirection_tokens(base, token);
-		if (token && strcmp(token->value, "|"))
+		if (token && ft_strcmp(token->value, "|"))
 		{
 			token->type = COMMAND_ARG_TYPE;
 			base->is_contain_args = TRUE;

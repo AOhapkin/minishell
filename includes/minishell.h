@@ -145,6 +145,8 @@ typedef struct s_glob
 {
 	t_list	*env;
 	char	**envp_chars;
+	int		last_exit_status;
+	int		is_exit;
 }	t_glob;
 
 t_glob	*singleton;
