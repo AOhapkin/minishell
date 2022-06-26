@@ -47,10 +47,6 @@ void free_piped_ops(t_op *parent)
 {
 	if (parent)
 	{
-		if (parent->out != STDOUT_FILENO)
-			close(parent->out);
-		if (parent->in != STDIN_FILENO)
-			close(parent->in);
 		free_piped_ops(parent->child);
 		free(parent);
 	}
@@ -64,18 +60,16 @@ void routine(void)
 
 	tokens = NULL;
 	buffer = NULL;
-	while (TRUE)
+	while (singleton->is_exit == FALSE)
 	{
 		buffer = read_from_input();
 		if (!buffer || ft_strlen(buffer) == 0)
 			continue;
 		tokens = lexer(buffer);
 		parent = expand(tokens);
-		if (parent != NULL)
-		{
+		if (parent != NULL && parent->is_valid)
 			interpreter(parent);
-			free_piped_ops(parent);
-		}
+		free_piped_ops(parent);
 //		print_all_tokens(tokens);
 		free_list_of_tokens(tokens);
 		free(buffer);

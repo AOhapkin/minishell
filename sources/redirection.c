@@ -15,8 +15,6 @@ int	open_out(t_op *base, t_token *token)
 	if (!strcmp(token->value, ">")
 		|| !strcmp(token->value, ">>"))
 	{
-		if (base->out != STDOUT_FILENO)
-			close(base->out);
 		arg = token->next;
 		if (!arg || is_redirection_operator_ish(arg) || !strcmp(arg->value, "|"))
 		{
@@ -24,11 +22,10 @@ int	open_out(t_op *base, t_token *token)
 			printf("minishell : syntax error near unexpected token `%s'\n", arg ? arg->value : "newline");
 			return SKIP;
 		}
-		if (!strcmp(token->value, ">"))
-			base->out = open(arg->value, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		if (!ft_strcmp(token->value, ">"))
+			token->type = REDIRECT_OUTPUT;
 		else
-			base->out = open(arg->value, O_RDWR | O_CREAT | O_APPEND, 0644);
-		token->type = REDIRECT_OUTPUT;
+			token->type = APPENDING_REDIRECTED_OUTPUT;
 		base->output = token;
 		arg->type = REDIRECT_ARG_TYPE;
 		return NOT_SKIP;
@@ -64,9 +61,6 @@ int	open_in(t_op *base, t_token *token)
 	if (!strcmp(token->value, "<")
 		|| !strcmp(token->value, "<<"))
 	{
-		if (base->in != STDIN_FILENO)
-			close(base->in);
-
 		arg = token->next;
 		if (!arg || is_redirection_operator_ish(arg) || !strcmp(arg->value, "|"))
 		{
@@ -75,11 +69,13 @@ int	open_in(t_op *base, t_token *token)
 			return SKIP;
 		}
 
-		if (!strcmp(token->value, "<")) // todo если файла нет должен "-bash: loh.txt: No such file or directory"
-			base->in = open(arg->value, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		if (!ft_strcmp(token->value, "<"))
+			token->type = REDIRECT_INPUT;
 		else
+		{
 			update_argument_token(base, arg);
-		token->type = REDIRECT_INPUT;
+			token->type = HERE_DOCUMENTS;
+		}
 		base->input = token;
 		arg->type = REDIRECT_ARG_TYPE;
 		return NOT_SKIP;

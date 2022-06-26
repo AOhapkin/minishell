@@ -35,7 +35,9 @@
 # define EXPORT_TYPE 4
 # define ENV_TYPE 5
 # define UNSET_TYPE 6
-# define NUM_OF_COMMANDS 4
+# define CD_TYPE 7
+# define PWD_TYPE 8
+# define NUM_OF_COMMANDS 8
 
 /**
  * Flags
@@ -112,9 +114,7 @@ typedef struct s_base
 {
 	t_token *command;
 	t_token *input;
-	int in;
 	t_token *output;
-	int out;
 	int is_contain_args;
 	int is_contain_flag;
 	struct s_base *child;
@@ -143,7 +143,10 @@ void	sort_t_env_array(t_env **array, int array_size);
 
 typedef struct s_glob
 {
-	t_list *env;
+	t_list	*env;
+	char	**envp_chars;
+	int		last_exit_status;
+	int		is_exit;
 }	t_glob;
 
 t_glob	*singleton;
@@ -156,11 +159,16 @@ void	delete_list_element_by_name(t_list **list, const char *param_name);
 t_env	**list_to_array(t_list *list);
 void	print_sorted_list(t_list *list_head);
 
-// export
-
 int		ft_strcmp(const char *s1, const char *s2);
 void	export_function(t_op *op);
 void	env_function(t_op *op);
 void	unset_function(t_op *op);
+void	pwd_function(t_op *op);
+void	exec_function(t_op *op);
+void	cd_function(t_op *operation);
+void	exit_function(t_op *op);
+
+void	handle_child_redirections(int fd[2], t_op *op);
+void	handle_parent_redirections(int fd[2], t_op *op);
 
 #endif

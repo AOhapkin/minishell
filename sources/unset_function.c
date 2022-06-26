@@ -19,4 +19,5 @@ void	unset_function(t_op *op)
 			unset_if_contains(arg->value);
 		arg = arg->next;
 	}
+	singleton->last_exit_status = 0;
 }

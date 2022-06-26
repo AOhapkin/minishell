@@ -1,38 +1,39 @@
 #include "minishell.h"
 
-
-void run_child_process(int fd[2], t_op *child)
+void run_child_process(int fd[2], t_op *op)
 {
-	if (child)
+	if (op && op->child)
 	{
 		dup2(fd[1], 1);
 		close(fd[0]);
 		close(fd[1]);
-		if (child->child)
-			handle_pipes(child);
-		else
-			child->function(child);
+		handle_pipes(op);
+	}
+	else if (op)
+	{
+		handle_child_redirections(fd, op);
+		op->function(op);
+		close(fd[0]);
+		close(fd[1]);
 	}
 	exit(0);
 }
 
-
-void run_parent_process(int fd[2], t_op *parent)
+void run_parent_process(int fd[2], t_op *op)
 {
-	dup2(fd[0], 0);
+	handle_parent_redirections(fd, op);
 	close(fd[0]);
 	close(fd[1]);
-	parent->function(parent);
+	op->function(op);
 	exit(0);
 }
 
 
 void handle_pipes(t_op *parent)
 {
-
-	int		fd[2];
-	pid_t	pid1;
-	pid_t	pid2;
+	int fd[2];
+	pid_t pid1;
+	pid_t pid2;
 
 	if (pipe(fd) == 0)
 	{
@@ -42,12 +43,10 @@ void handle_pipes(t_op *parent)
 		pid2 = fork();
 		if (pid2 == 0)
 			run_parent_process(fd, parent);
-		if (fd[0] != STDOUT_FILENO && fd[0] != STDOUT_FILENO)
-			close(fd[0]);
-		if (fd[1] != STDOUT_FILENO && fd[1] != STDOUT_FILENO)
-			close(fd[1]);
-		waitpid(pid1, NULL, 0);
-		waitpid(pid2, NULL, 0);
+		close(fd[0]);
+		close(fd[1]);
+		waitpid(pid1, &(singleton->last_exit_status), 0);
+		waitpid(pid2, &(singleton->last_exit_status), 0);
 	}
 }
 
@@ -55,14 +54,15 @@ int is_redirectable_op(t_op *op)
 {
 	char op_type;
 	op_type = op->command->type;
-	return op_type == ECHO_TYPE
-			|| op_type == ENV_CHAR
-			|| (op_type = EXPORT_TYPE && op->is_contain_args == FALSE);
+	return (op_type == ECHO_TYPE)
+		   || op_type == EXEC_TYPE
+		   || (op_type == PWD_TYPE)
+		   || (op_type == EXPORT_TYPE && op->is_contain_args == FALSE);
 }
 
 void no_pipes_execution(t_op *op)
 {
-	if (op->out && is_redirectable_op(op))
+	if (is_redirectable_op(op))
 		handle_pipes(op);
 	else
 		op->function(op);
@@ -70,10 +70,9 @@ void no_pipes_execution(t_op *op)
 
 void interpreter(t_op *parent)
 {
-	if (parent->command->type == EXIT_TYPE)
-		exit(0);
-	if (parent->child)
-		handle_pipes(parent);
-	else
-		no_pipes_execution(parent);
+//	if (parent->child)
+//		handle_pipes(parent);
+//	else
+//		no_pipes_execution(parent);
+	parent->function(parent);
 }

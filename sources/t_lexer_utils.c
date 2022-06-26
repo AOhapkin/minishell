@@ -1,5 +1,23 @@
 #include "minishell.h"
 
+char	*ft_strncpy(char *dst, const char *src, size_t len)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < len && src[i] != '\0')
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	while (i < len)
+	{
+		dst[i] = '\0';
+		i++;
+	}
+	return (dst);
+}
+
 /**
  * Заполнение вспомогательной структуры
  */
@@ -36,16 +54,41 @@ void lexer_add_token(t_lexer *lexer)
 	lexer->value = NULL;
 }
 
+char *get_env_name(char *buffer)
+{
+	char *from;
+	char *to;
+
+	if (buffer)
+	{
+		from = buffer;
+		to = from;
+		while (*to && is_valid_char_for_env_var_name(*to))
+			to++;
+
+		char *name = ft_memalloc(to - from + 1);
+		return ft_strncpy(name, from, to - from);
+	}
+	return NULL;
+}
+
 /**
  * Добавляет к value значение переменной,
  * инкремент buffer чтобы пропустить имя переменной.
- * TODO ПОМЕЯТЬ НА НОРМАЛЬНЫЙ ОТДЕЛЬНОЙ ЗАДАЧЕЙ
  */
 void lexer_add_env_to_value_and_skip_name(t_lexer *lexer)
 {
+	char *env_name;
+	t_list *env_list;
+
 	lexer->buffer++;
-	lexer->value = join_and_free_srcs(lexer->value, ft_strdup("ENV_VALUE"));
-	while (*lexer->buffer && is_valid_char_for_env_var_name(*lexer->buffer))
-		lexer->buffer++;
+	env_name = get_env_name(lexer->buffer);
+	env_list = find_element_by_key(singleton->env, env_name);
+	if (env_list
+		&& ((t_env*)(env_list->content))->value
+		&& ft_strlen(((t_env*)(env_list->content))->value) > 0)
+		lexer->value = join_and_free_srcs(lexer->value, ft_strdup(((t_env*)(env_list->content))->value));
+	lexer->buffer = lexer->buffer + ft_strlen(env_name);
+	free(env_name);
 	lexer->from = lexer->buffer;
 }
