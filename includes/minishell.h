@@ -7,6 +7,7 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <fcntl.h>
+#include <errno.h>
 # include "libft.h"
 
 # define PROMPT "minishell > "
