@@ -60,8 +60,6 @@
 # define HERE_DOCUMENTS 34 // <<
 # define PIPE 40 // |
 
-# define WEXITSTATUS(status) (((status) & 0xff00) >> 8)
-
 typedef struct s_env
 {
 	char *key;

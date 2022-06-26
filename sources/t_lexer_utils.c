@@ -72,6 +72,14 @@ char *get_env_name(char *buffer)
 	return NULL;
 }
 
+int get_real_error_status(int status)
+{
+	if (status > 255)
+		return status / 255;
+	else
+		return status;
+}
+
 /**
  * Добавляет к value значение переменной,
  * инкремент buffer чтобы пропустить имя переменной.
@@ -85,7 +93,7 @@ void lexer_add_env_to_value_and_skip_name(t_lexer *lexer)
 	if (*(lexer->buffer) == '?')
 	{
 		env_name = ft_strdup("?");
-		lexer->value = join_and_free_srcs(lexer->value, ft_itoa(WEXITSTATUS(singleton->last_exit_status)));
+		lexer->value = join_and_free_srcs(lexer->value, ft_itoa(get_real_error_status(singleton->last_exit_status)));
 	}
 	else
 	{
