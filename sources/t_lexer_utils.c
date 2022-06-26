@@ -82,12 +82,20 @@ void lexer_add_env_to_value_and_skip_name(t_lexer *lexer)
 	t_list *env_list;
 
 	lexer->buffer++;
-	env_name = get_env_name(lexer->buffer);
-	env_list = find_element_by_key(singleton->env, env_name);
-	if (env_list
-		&& ((t_env*)(env_list->content))->value
-		&& ft_strlen(((t_env*)(env_list->content))->value) > 0)
-		lexer->value = join_and_free_srcs(lexer->value, ft_strdup(((t_env*)(env_list->content))->value));
+	if (*(lexer->buffer) == '?')
+	{
+		env_name = ft_strdup("?");
+		lexer->value = join_and_free_srcs(lexer->value, ft_itoa(singleton->last_exit_status));
+	}
+	else
+	{
+		env_name = get_env_name(lexer->buffer);
+		env_list = find_element_by_key(singleton->env, env_name);
+		if (env_list
+			&& ((t_env*)(env_list->content))->value
+			&& ft_strlen(((t_env*)(env_list->content))->value) > 0)
+			lexer->value = join_and_free_srcs(lexer->value, ft_strdup(((t_env*)(env_list->content))->value));
+	}
 	lexer->buffer = lexer->buffer + ft_strlen(env_name);
 	free(env_name);
 	lexer->from = lexer->buffer;

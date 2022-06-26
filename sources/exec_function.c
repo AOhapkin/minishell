@@ -44,5 +44,6 @@ void exec_function(t_op *op)
 	bin_path = op->command->value;
 	argv = get_argv(op->command);
 	execve(bin_path, argv, singleton->envp_chars);
+
 	free(argv);
 }

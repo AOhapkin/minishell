@@ -19,7 +19,10 @@ void print_all_tokens(t_token *token)
  */
 int is_valid_char_for_env_var_name(char env_var_name_char)
 {
-	return ft_isalpha(env_var_name_char) || ft_isdigit(env_var_name_char) || env_var_name_char == '_';
+	return ft_isalpha(env_var_name_char)
+		|| ft_isdigit(env_var_name_char)
+		|| env_var_name_char == '_'
+		|| env_var_name_char == '?';
 }
 
 char *join_and_free_srcs(char *s1, char *s2)
