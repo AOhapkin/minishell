@@ -37,6 +37,7 @@ void handle_pipes(t_op *parent)
 
 	if (pipe(fd) == 0)
 	{
+		handle_cmd_signals();
 		pid1 = fork();
 		if (pid1 == 0)
 			run_child_process(fd, parent->child);

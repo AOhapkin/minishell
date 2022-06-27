@@ -184,5 +184,6 @@ void	singleton_handle_errors();
 void	handle_ctrl_c_signal(int signal);
 void	signal_ctlc_heredoc(int sig);
 int		termios_change(int echo_ctl_chr);
+void	handle_cmd_signals(void);
 
 #endif
