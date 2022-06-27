@@ -12,6 +12,14 @@ void	handle_ctrl_c_signal(int signal)
 	}
 }
 
+void	signal_ctlc_heredoc(int sig)
+{
+	if (sig == SIGINT)
+	{
+		exit(1);
+	}
+}
+
 int	termios_change(int echo_ctl_chr)
 {
 	struct termios	terminos_p;

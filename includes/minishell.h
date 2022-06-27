@@ -182,6 +182,7 @@ void	singleton_handle_errors();
 //int		get_err_code(void);
 
 void	handle_ctrl_c_signal(int signal);
-int	termios_change(int echo_ctl_chr);
+void	signal_ctlc_heredoc(int sig);
+int		termios_change(int echo_ctl_chr);
 
 #endif

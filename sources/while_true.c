@@ -60,9 +60,11 @@ void routine(void)
 
 	tokens = NULL;
 	buffer = NULL;
+	// игнорирование (ctrl-\)
 	signal(SIGQUIT, SIG_IGN);
 	while (singleton->is_exit == FALSE)
 	{
+		//ставим обработчик на (ctrl-c)
 		signal(SIGINT, handle_ctrl_c_signal);
 		termios_change(0);
 		buffer = read_from_input();
