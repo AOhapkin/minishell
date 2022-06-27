@@ -38,7 +38,7 @@ char *read_from_input()
 	input = readline(PROMPT);
 	while (!is_all_quotes_close(input))
 		input = read_from_input_and_join_with_previous(input);
-	if (isatty(STDIN_FILENO) && input)
+	if (isatty(STDIN_FILENO) && input && ft_strlen(input))
 		add_history(input);
 	return (input);
 }
