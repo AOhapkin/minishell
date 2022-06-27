@@ -3,8 +3,8 @@
 t_token *handle_redirection_tokens(t_op *base, t_token *token)
 {
 	while (base->is_valid && token
-			&& (open_in(base, token) == NOT_SKIP
-				|| open_out(base, token) == NOT_SKIP))
+			&& (expand_input_redirection(base, token) == NOT_SKIP
+				|| expand_output_redirection(base, token) == NOT_SKIP))
 		token = token->next->next;
 	return token;
 }
@@ -73,10 +73,20 @@ int	is_executable(t_token *token)
 	return FALSE;
 }
 
+t_token *handle_unexpected_token(t_op *base, t_token *token)
+{
+	printf("minishell : syntax error near unexpected token `%s'\n", token->value);
+	singleton->last_exit_status = 258;
+	base->is_valid = FALSE;
+	return NULL;
+}
+
 t_token *handle_command_token(t_op *base, t_token *token)
 {
 	token = handle_redirection_tokens(base, token);
 	base->command = token;
+	if (token->type == PIPE)
+		return handle_unexpected_token(base, token);
 	if (token && !strcmp(token->value, "echo"))
 	{
 		token->type = ECHO_TYPE;
@@ -146,10 +156,10 @@ t_token *handle_flag_tokens(t_op *base, t_token *token)
 
 t_token *handle_argument_tokens(t_op *base, t_token *token)
 {
-	while (base->is_valid && token && ft_strcmp(token->value, "|"))
+	while (base->is_valid && token && token->type != PIPE)
 	{
 		token = handle_redirection_tokens(base, token);
-		if (token && ft_strcmp(token->value, "|"))
+		if (token && token->type != PIPE)
 		{
 			token->type = COMMAND_ARG_TYPE;
 			base->is_contain_args = TRUE;
@@ -177,10 +187,9 @@ t_op *expand(t_token *token)
 	token = handle_argument_tokens(op, token);
 	if (op->is_valid == TRUE
 		&& token
-		&& !strcmp(token->value, "|")
+		&& token->type == PIPE
 		&& token->next)
 	{
-		token->type = PIPE;
 		parent = expand(token->next);
 		if (!parent)
 			return op;

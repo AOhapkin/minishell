@@ -8,7 +8,7 @@ void exit_function(t_op *op)
 
 	arg = op->command->next;
 	i = 0;
-	while (arg && ft_strcmp(arg->value, "|"))
+	while (arg && arg->type != PIPE)
 	{
 		if (i == 0 && ft_isdigit(*(arg->value)))
 			temp_exit_arg = ft_atoi(arg->value);
