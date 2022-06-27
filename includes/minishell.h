@@ -4,11 +4,14 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
-#include <readline/history.h>
-#include <readline/readline.h>
-#include <fcntl.h>
-#include <errno.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <fcntl.h>
+# include <errno.h>
 # include "libft.h"
+# include <sys/ioctl.h>
+# include <signal.h>
+# include <termios.h>
 
 # define PROMPT "minishell > "
 
@@ -177,5 +180,8 @@ void	handle_single_redirection(t_op *op);
 void	singleton_handle_errors();
 //void	set_err_code(int err_code);
 //int		get_err_code(void);
+
+void	handle_sigint(int signal);
+int	termios_change(int echo_ctl_chr);
 
 #endif

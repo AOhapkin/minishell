@@ -81,4 +81,5 @@ add_executable(minishell
         sources/exit_function.c
         sources/redirections_handler.c
         sources/error_utils.c
-        sources/exec_function.c)
+        sources/exec_function.c
+        sources/signal.c)
