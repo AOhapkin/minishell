@@ -65,13 +65,17 @@ void handle_child_redirections(int fd[2], t_op *op)
 
 void handle_parent_redirections(int fd[2], t_op *op)
 {
+	int tmp;
+
 	if (op->input && op->input->type == HERE_DOCUMENTS)
 		handle_here_documents(op);
 	else
 	{
+		tmp = fd[0];
 		if (op->input && op->input->type == REDIRECT_INPUT)
 			handle_input_from_file(fd, op);
-		dup2(fd[0], 0);
+		if (tmp != fd[0] || op->child)
+			dup2(fd[0], 0);
 	}
 	if (op->output)
 	{
