@@ -63,7 +63,7 @@ void routine(void)
 	signal(SIGQUIT, SIG_IGN);
 	while (singleton->is_exit == FALSE)
 	{
-		signal(SIGINT, handle_sigint);
+		signal(SIGINT, handle_ctrl_c_signal);
 		termios_change(0);
 		buffer = read_from_input();
 		if (!buffer || ft_strlen(buffer) == 0)

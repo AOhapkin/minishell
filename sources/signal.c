@@ -1,14 +1,7 @@
 #include "minishell.h"
 
-void	handle_sigint(int signal)
+void	handle_ctrl_c_signal(int signal)
 {
-//	if (signal == SIGINT)
-//	{
-//		singleton->last_exit_status = 130;
-//		ioctl(STDIN_FILENO, TIOCSTI, "\n");
-//		rl_replace_line("", 0);
-//		rl_on_new_line();
-//	}
 	if (signal == SIGINT)
 	{
 		singleton->last_exit_status = 130;

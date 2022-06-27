@@ -181,7 +181,7 @@ void	singleton_handle_errors();
 //void	set_err_code(int err_code);
 //int		get_err_code(void);
 
-void	handle_sigint(int signal);
+void	handle_ctrl_c_signal(int signal);
 int	termios_change(int echo_ctl_chr);
 
 #endif
