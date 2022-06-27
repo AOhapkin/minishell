@@ -36,6 +36,8 @@ char *read_from_input()
 	char	*input;
 
 	input = readline(PROMPT);
+	if (!input)
+		return input;
 	while (!is_all_quotes_close(input))
 		input = read_from_input_and_join_with_previous(input);
 	if (isatty(STDIN_FILENO) && input && ft_strlen(input))
@@ -68,8 +70,13 @@ void routine(void)
 		signal(SIGINT, handle_ctrl_c_signal);
 		termios_change(0);
 		buffer = read_from_input();
-		if (!buffer || ft_strlen(buffer) == 0)
+		if (!buffer)
+			break;
+		if (ft_strlen(buffer) == 0)
+		{
+			free(buffer);
 			continue;
+		}
 		tokens = lexer(buffer);
 		parent = expand(tokens);
 		if (parent != NULL && parent->is_valid)
