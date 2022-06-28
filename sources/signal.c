@@ -1,11 +1,12 @@
 #include "minishell.h"
 
+//todo не работает прерывание для кейса `cd << ..`
 
 static void	handle_cmd_signal(int sig)
 {
 	if (sig == SIGINT)
 	{
-//		set_err_code(130);
+		singleton->last_exit_status = 130;
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -16,7 +17,7 @@ static void	handle_global_signal(int sig)
 {
 	if (sig == SIGINT)
 	{
-//		set_err_code(1);
+		singleton->last_exit_status = 1;
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -36,27 +37,6 @@ void	handle_global_signals(void)
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, SIG_IGN);
 	signal(SIGINT, handle_global_signal);
-}
-
-
-void	handle_ctrl_c_signal(int signal)
-{
-	if (signal == SIGINT)
-	{
-		singleton->last_exit_status = 130;
-		write(STDERR_FILENO, "\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-}
-
-void	signal_ctlc_heredoc(int sig)
-{
-	if (sig == SIGINT)
-	{
-		exit(1);
-	}
 }
 
 int	termios_change(int echo_ctl_chr)
