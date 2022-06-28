@@ -9,7 +9,7 @@ t_token *handle_redirection_tokens(t_op *base, t_token *token)
 	return token;
 }
 
-free_paths_array(char **paths)
+void free_paths_array(char **paths)
 {
 	char **tmp;
 

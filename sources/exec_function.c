@@ -43,7 +43,7 @@ void exec_function(t_op *op)
 
 	bin_path = op->command->value;
 	argv = get_argv(op->command);
-	execve(bin_path, argv, singleton->envp_chars);
-
+	if (execve(bin_path, argv, singleton->envp_chars))
+		printf("-minishell: %s: %s\n", bin_path, strerror(errno));
 	free(argv);
 }

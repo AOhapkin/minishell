@@ -10,6 +10,7 @@ void handle_here_documents(t_op *op)
 	input_buff = op->input->next->value;
 	dup2(input_pipe_fd[0], 0);
 	write(input_pipe_fd[1], input_buff, ft_strlen(input_buff));
+	write(input_pipe_fd[1], "\n", 1);
 	close(input_pipe_fd[0]);
 	close(input_pipe_fd[1]);
 }

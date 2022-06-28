@@ -37,7 +37,7 @@ void update_argument_token(t_op *base, t_token *arg)
 
 	result = readline(">");
 	input = result;
-	while (strcmp(input, arg->value))
+	while (input && ft_strcmp(input, arg->value))
 	{
 		if (input != result)
 		{
@@ -46,7 +46,8 @@ void update_argument_token(t_op *base, t_token *arg)
 		}
 		input = readline(">");
 	}
-	free(input);
+	if (input)
+		free(input);
 	free(arg->value);
 	arg->value = result;
 }
