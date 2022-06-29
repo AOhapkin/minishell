@@ -77,7 +77,7 @@ t_token	*handle_unexpected_token(t_op *base, t_token *token)
 {
 	printf("minishell : syntax error near unexpected token `%s'\n",
 		token->value);
-	g_singleton->last_exit_status = 258;
+	g_singleton->last_exit_stat = 258;
 	base->is_valid = FALSE;
 	return (NULL);
 }
@@ -131,7 +131,7 @@ t_token	*handle_command_token(t_op *base, t_token *token)
 	else
 	{
 		printf("minishell : %s: command not found\n", token->value ? token->value : "newline");
-		g_singleton->last_exit_status = 127;
+		g_singleton->last_exit_stat = 127;
 		base->is_valid = FALSE;
 		return (NULL);
 	}

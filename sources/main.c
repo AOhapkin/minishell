@@ -15,7 +15,7 @@ void	init_singleton(char **envp)
 	g_singleton = ft_memalloc(sizeof(t_glob));
 	g_singleton->env = save_envp_to_list(envp);
 	g_singleton->envp_chars = envp;
-	g_singleton->last_exit_status = 1;
+	g_singleton->last_exit_stat = 1;
 	g_singleton->is_exit = FALSE;
 }
 
@@ -41,12 +41,12 @@ int main(int argc, char **argv, char **envp)
 
 	routine();
 	rl_clear_history();
-	return (g_singleton->last_exit_status);
+	return (g_singleton->last_exit_stat);
 }
 
 void singleton_handle_errors()
 {
-	g_singleton->last_exit_status;
+	g_singleton->last_exit_stat;
 }
 
 

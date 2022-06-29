@@ -65,5 +65,5 @@ void	export_function(t_op *op)
 			args = args->next;
 		}
 	}
-	g_singleton->last_exit_status = 0;
+	g_singleton->last_exit_stat = 0;
 }

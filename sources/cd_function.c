@@ -63,18 +63,18 @@ void	go_to_oldpwd(void)
 	if (env_oldpwd == NULL)
 	{
 		printf("cd: OLDPWD not set\n");
-		g_singleton->last_exit_status = 1;
+		g_singleton->last_exit_stat = 1;
 		return ;
 	}
 	oldpwd_path = ((t_env *)env_oldpwd->content)->value;
 	if (ft_strlen(oldpwd_path) == 1)
 	{
 		printf("cd: OLDPWD not set\n");
-		g_singleton->last_exit_status = 1;
+		g_singleton->last_exit_stat = 1;
 		return ;
 	}
 	chdir(oldpwd_path);
-	g_singleton->last_exit_status = 0;
+	g_singleton->last_exit_stat = 0;
 }
 
 void	cd_function(t_op *operation)
@@ -96,10 +96,10 @@ void	cd_function(t_op *operation)
 		if (chdir(path) == 0)
 		{
 			update_pwd();
-			g_singleton->last_exit_status = 0;
+			g_singleton->last_exit_stat = 0;
 			return ;
 		}
 		printf("minishell > cd: %s: %s\n", path, strerror(errno));
-		g_singleton->last_exit_status = 1;
+		g_singleton->last_exit_stat = 1;
 	}
 }

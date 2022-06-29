@@ -92,7 +92,7 @@ void lexer_add_env_to_value_and_skip_name(t_lexer *lexer)
 	if (*(lexer->buffer) == '?')
 	{
 		env_name = ft_strdup("?");
-		lexer->value = join_and_free_srcs(lexer->value, ft_itoa(g_singleton->last_exit_status));
+		lexer->value = join_and_free_srcs(lexer->value, ft_itoa(g_singleton->last_exit_stat));
 	}
 	else
 	{

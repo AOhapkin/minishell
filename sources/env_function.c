@@ -10,5 +10,5 @@ void	env_function(t_op *op)
 		print_env(current->content);
 		current = current->next;
 	}
-	g_singleton->last_exit_status = 0;
+	g_singleton->last_exit_stat = 0;
 }
