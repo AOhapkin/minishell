@@ -1,12 +1,12 @@
 #include "minishell.h"
 
-void print_env(void *env)
+void	print_env(void *env)
 {
-	char *key;
-	char *value;
+	char	*key;
+	char	*value;
 
-	key = ((t_env*)env)->key;
-	value = ((t_env*)env)->value;
+	key = ((t_env *)env)->key;
+	value = ((t_env *)env)->value;
 	if (value)
 		printf("%s=%s\n", key, value);
 }
@@ -20,7 +20,7 @@ t_list	*save_envp_to_list(char **envp)
 
 	i = 0;
 	result = NULL;
-	while(envp[i])
+	while (envp[i])
 	{
 		env = new_env_by_envp(envp[i]);
 		new_element = ft_lstnew(env);
@@ -30,27 +30,28 @@ t_list	*save_envp_to_list(char **envp)
 	return (result);
 }
 
-t_list *find_element_by_key(t_list *list, char *key)
+t_list	*find_element_by_key(t_list *list, char *key)
 {
 	t_list	*elem;
+
 	while (list)
 	{
-		if (!ft_strcmp(key, ((t_env*)(list->content))->key))
-			return list;
+		if (!ft_strcmp(key, ((t_env *)(list->content))->key))
+			return (list);
 		list = list->next;
 	}
-	return NULL;
+	return (NULL);
 }
 
 void	delete_list_element_by_name(t_list **list, const char *param_name)
 {
-	t_list *current;
-	t_list *prev;
-	t_env *env_var;
+	t_list	*current;
+	t_list	*prev;
+	t_env	*env_var;
 
 	prev = NULL;
 	current = *list;
-	while(current)
+	while (current)
 	{
 		env_var = current->content;
 		if (!ft_strcmp(param_name, env_var->key))
@@ -61,7 +62,7 @@ void	delete_list_element_by_name(t_list **list, const char *param_name)
 				prev->next = current->next;
 			free_env(&env_var);
 			free(current);
-			return;
+			return ;
 		}
 		prev = current;
 		current = current->next;
@@ -74,8 +75,8 @@ t_env	**list_to_array(t_list *list)
 	int		i;
 	int		list_size;
 
-	list_size= ft_lstsize(list);
-	env = ft_memalloc((list_size + 1) * sizeof(t_env*));
+	list_size = ft_lstsize(list);
+	env = ft_memalloc((list_size + 1) * sizeof(t_env *));
 	i = 0;
 	while (list)
 	{
@@ -95,4 +96,3 @@ void	print_sorted_list(t_list *list_head)
 	print_t_env_array(values_array);
 	free(values_array);
 }
-
