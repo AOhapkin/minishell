@@ -1,10 +1,9 @@
-#include <errno.h>
 #include "minishell.h"
 
-void handle_here_documents(t_op *op)
+void	handle_here_documents(t_op *op)
 {
-	int input_pipe_fd[2];
-	char *input_buff;
+	int		input_pipe_fd[2];
+	char	*input_buff;
 
 	pipe(input_pipe_fd);
 	input_buff = op->input->next->value;
@@ -15,10 +14,10 @@ void handle_here_documents(t_op *op)
 	close(input_pipe_fd[1]);
 }
 
-void handle_input_from_file(int fd[2], t_op *op)
+void	handle_input_from_file(int fd[2], t_op *op)
 {
-	char *input_file;
-	int input_fd;
+	char	*input_file;
+	int		input_fd;
 
 	input_file = op->input->next->value;
 	input_fd = open(input_file, O_RDONLY);
@@ -31,10 +30,10 @@ void handle_input_from_file(int fd[2], t_op *op)
 	}
 }
 
-void handle_output_to_file(int fd[2], t_op *op)
+void	handle_output_to_file(int fd[2], t_op *op)
 {
-	char *out_file;
-	int out_fd;
+	char	*out_file;
+	int		out_fd;
 
 	out_file = op->output->next->value;
 	if (op->output->type == REDIRECT_OUTPUT)
@@ -50,7 +49,7 @@ void handle_output_to_file(int fd[2], t_op *op)
 	}
 }
 
-void handle_child_redirections(int fd[2], t_op *op)
+void	handle_child_redirections(int fd[2], t_op *op)
 {
 	if (op->input && op->input->type == HERE_DOCUMENTS)
 		handle_here_documents(op);
@@ -64,9 +63,9 @@ void handle_child_redirections(int fd[2], t_op *op)
 	dup2(fd[1], 1);
 }
 
-void handle_parent_redirections(int fd[2], t_op *op)
+void	handle_parent_redirections(int fd[2], t_op *op)
 {
-	int tmp;
+	int	tmp;
 
 	if (op->input && op->input->type == HERE_DOCUMENTS)
 		handle_here_documents(op);
@@ -85,10 +84,10 @@ void handle_parent_redirections(int fd[2], t_op *op)
 	}
 }
 
-void handle_input_from_file_single(t_op *op)
+void	handle_input_from_file_single(t_op *op)
 {
-	char *input_file;
-	int input_fd;
+	char	*input_file;
+	int		input_fd;
 
 	input_file = op->input->next->value;
 	input_fd = open(input_file, O_RDONLY);
@@ -98,10 +97,10 @@ void handle_input_from_file_single(t_op *op)
 		close(input_fd);
 }
 
-void handle_output_to_file_single(t_op *op)
+void	handle_output_to_file_single(t_op *op)
 {
-	char *out_file;
-	int out_fd;
+	char	*out_file;
+	int		out_fd;
 
 	out_file = op->output->next->value;
 	if (op->output->type == REDIRECT_OUTPUT)
@@ -114,7 +113,7 @@ void handle_output_to_file_single(t_op *op)
 		close(out_fd);
 }
 
-void handle_single_redirection(t_op *op)
+void	handle_single_redirection(t_op *op)
 {
 	if (op->input && op->input->type == HERE_DOCUMENTS)
 		handle_here_documents(op);

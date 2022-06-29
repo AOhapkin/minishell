@@ -1,18 +1,19 @@
 #include "minishell.h"
 
-int is_redirection_type(char type)
+int	is_redirection_type(char type)
 {
-	return type == REDIRECT_INPUT
-		   || type == HERE_DOCUMENTS
-		   || type == APPENDING_REDIRECTED_OUTPUT
-		   || type == REDIRECT_OUTPUT;
+	return (type == REDIRECT_INPUT
+		|| type == HERE_DOCUMENTS
+		|| type == APPENDING_REDIRECTED_OUTPUT
+		|| type == REDIRECT_OUTPUT);
 }
 
 int	expand_output_redirection(t_op *base, t_token *token)
 {
-	t_token *arg;
+	t_token	*arg;
 
-	if (token->type == REDIRECT_OUTPUT || token->type == APPENDING_REDIRECTED_OUTPUT)
+	if (token->type == REDIRECT_OUTPUT
+		|| token->type == APPENDING_REDIRECTED_OUTPUT)
 	{
 		arg = token->next;
 		if (!arg || arg->type == PIPE || is_redirection_type(arg->type))
@@ -21,16 +22,16 @@ int	expand_output_redirection(t_op *base, t_token *token)
 //			printf("minishell : syntax error near unexpected token `%s'\n", arg ? arg->value : "newline");
 //			singleton->last_exit_status = 258;
 			handle_unexpected_token(base, token);
-			return SKIP;
+			return (SKIP);
 		}
 		base->output = token;
 		arg->type = REDIRECT_ARG_TYPE;
-		return NOT_SKIP;
+		return (NOT_SKIP);
 	}
-	return SKIP;
+	return (SKIP);
 }
 
-void update_argument_token(t_op *base, t_token *arg)
+void	update_argument_token(t_op *base, t_token *arg)
 {
 	char	*input;
 	char	*result;
@@ -54,21 +55,22 @@ void update_argument_token(t_op *base, t_token *arg)
 
 int	expand_input_redirection(t_op *base, t_token *token)
 {
-	t_token *arg;
+	t_token	*arg;
 
 	if (token->type == REDIRECT_INPUT || token->type == HERE_DOCUMENTS)
 	{
 		arg = token->next;
 		if (!arg || arg->type == PIPE || is_redirection_type(arg->type))
 		{
-			handle_unexpected_token;
-			return SKIP;
+			// это нужно?
+//			handle_unexpected_token;
+			return (SKIP);
 		}
 		if (token->type == HERE_DOCUMENTS)
 			update_argument_token(base, arg);
 		base->input = token;
 		arg->type = REDIRECT_ARG_TYPE;
-		return NOT_SKIP;
+		return (NOT_SKIP);
 	}
-	return SKIP;
+	return (SKIP);
 }
