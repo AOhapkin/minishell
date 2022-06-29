@@ -14,18 +14,19 @@ int	is_valid_export_arg(char *argument)
 	i = 0;
 	if (argument[i] == '\0' || argument[i] == '=')
 		return (FALSE);
-	while (argument[i] != '\0' && argument[i] != '=' && is_valid_env_char(argument[i]))
+	while (argument[i] != '\0' && argument[i] != '='
+		&& is_valid_env_char(argument[i]))
 		i++;
 	if (argument[i] == '=' || argument[i] == '\0')
 		return (TRUE);
 	return (FALSE);
 }
 
-void add_or_update_env_var(char *arg)
+void	add_or_update_env_var(char *arg)
 {
-	t_list *current;
-	t_env *new_env;
-	char **separated;
+	t_list	*current;
+	t_env	*new_env;
+	char	**separated;
 
 	separated = ft_split(arg, '=');
 	current = find_element_by_key(g_singleton->env, separated[0]);
@@ -37,8 +38,8 @@ void add_or_update_env_var(char *arg)
 	}
 	else
 	{
-		free(((t_env*)(current->content))->value);
-		((t_env*)(current->content))->value = separated[1];
+		free(((t_env *)(current->content))->value);
+		((t_env *)(current->content))->value = separated[1];
 		free(separated[0]);
 	}
 	free(separated);
@@ -53,17 +54,16 @@ void	export_function(t_op *op)
 	else
 	{
 		args = op->command->next;
-		while(args && args->type != PIPE)
+		while (args && args->type != PIPE)
 		{
 			if (!is_valid_export_arg(args->value))
 			{
 				printf("Not valid arg - %s\n", (char *)args->value);
-				break;
+				break ;
 			}
 			add_or_update_env_var(args->value);
 			args = args->next;
 		}
-//		print_sorted_list(singleton->env); // оставил чтобы можно было проверить добавление
 	}
 	g_singleton->last_exit_status = 0;
 }

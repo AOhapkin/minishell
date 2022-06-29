@@ -1,9 +1,9 @@
 #include "minishell.h"
 
-void echo_function(t_op *op)
+void	echo_function(t_op *op)
 {
-	t_token *arg;
-	int is_first;
+	t_token	*arg;
+	int		is_first;
 
 	arg = op->command->next;
 	is_first = TRUE;

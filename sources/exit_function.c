@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void exit_function(t_op *op)
+void	exit_function(t_op *op)
 {
 	t_token	*arg;
 	int		temp_exit_arg;
@@ -16,7 +16,7 @@ void exit_function(t_op *op)
 		{
 			g_singleton->last_exit_status = 2;
 			g_singleton->is_exit = TRUE;
-			return;
+			return ;
 		}
 		i++;
 		arg = arg->next;

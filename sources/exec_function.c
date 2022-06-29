@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 int	get_num_of_args(t_token *list_head)
 {
 	int		len;
@@ -17,7 +16,7 @@ int	get_num_of_args(t_token *list_head)
 	return (len);
 }
 
-char **get_argv(t_token *args_tokens)
+char	**get_argv(t_token *args_tokens)
 {
 	char	**args_array;
 	int		array_len;
@@ -26,7 +25,7 @@ char **get_argv(t_token *args_tokens)
 	array_len = get_num_of_args(args_tokens);
 	args_array = ft_memalloc(sizeof(char *) * (array_len + 1));
 	i = 0;
-	while(args_tokens && args_tokens->type != PIPE)
+	while (args_tokens && args_tokens->type != PIPE)
 	{
 		if (args_tokens->type == COMMAND_ARG_TYPE
 			|| args_tokens->type == EXEC_TYPE)
@@ -36,7 +35,7 @@ char **get_argv(t_token *args_tokens)
 	return (args_array);
 }
 
-void exec_function(t_op *op)
+void	exec_function(t_op *op)
 {
 	char	*bin_path;
 	char	**argv;

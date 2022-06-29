@@ -1,17 +1,17 @@
 #include "minishell.h"
 
-t_token *handle_redirection_tokens(t_op *base, t_token *token)
+t_token	*handle_redirection_tokens(t_op *base, t_token *token)
 {
 	while (base->is_valid && token
-			&& (expand_input_redirection(base, token) == NOT_SKIP
-				|| expand_output_redirection(base, token) == NOT_SKIP))
+		&& (expand_input_redirection(base, token) == NOT_SKIP
+			|| expand_output_redirection(base, token) == NOT_SKIP))
 		token = token->next->next;
-	return token;
+	return (token);
 }
 
-void free_paths_array(char **paths)
+void	free_paths_array(char **paths)
 {
-	char **tmp;
+	char	**tmp;
 
 	tmp = paths;
 	while (*tmp)
@@ -22,9 +22,9 @@ void free_paths_array(char **paths)
 	free(paths);
 }
 
-char *get_path_to_bin(char *name, char *env_path_value)
+char	*get_path_to_bin(char *name, char *env_path_value)
 {
-	char **paths;
+	char	**paths;
 	char	*temp;
 	char	*full_path;
 	int		i;
@@ -45,7 +45,7 @@ char *get_path_to_bin(char *name, char *env_path_value)
 		i++;
 	}
 	free_paths_array(paths);
-	return NULL;
+	return (NULL);
 }
 
 int	is_executable(t_token *token)
@@ -70,23 +70,24 @@ int	is_executable(t_token *token)
 			return (TRUE);
 		}
 	}
-	return FALSE;
+	return (FALSE);
 }
 
-t_token *handle_unexpected_token(t_op *base, t_token *token)
+t_token	*handle_unexpected_token(t_op *base, t_token *token)
 {
-	printf("minishell : syntax error near unexpected token `%s'\n", token->value);
+	printf("minishell : syntax error near unexpected token `%s'\n",
+		token->value);
 	g_singleton->last_exit_status = 258;
 	base->is_valid = FALSE;
-	return NULL;
+	return (NULL);
 }
 
-t_token *handle_command_token(t_op *base, t_token *token)
+t_token	*handle_command_token(t_op *base, t_token *token)
 {
 	token = handle_redirection_tokens(base, token);
 	base->command = token;
 	if (token->type == PIPE)
-		return handle_unexpected_token(base, token);
+		return (handle_unexpected_token(base, token));
 	if (token && !strcmp(token->value, "echo"))
 	{
 		token->type = ECHO_TYPE;
@@ -132,14 +133,15 @@ t_token *handle_command_token(t_op *base, t_token *token)
 		printf("minishell : %s: command not found\n", token->value ? token->value : "newline");
 		g_singleton->last_exit_status = 127;
 		base->is_valid = FALSE;
-		return NULL;
+		return (NULL);
 	}
-	return token->next;
+	return (token->next);
 }
 
-t_token *handle_flag_tokens(t_op *base, t_token *token)
+t_token	*handle_flag_tokens(t_op *base, t_token *token)
 {
-	while (base->is_valid && token && !base->is_contain_args && base->command->type == ECHO_TYPE)
+	while (base->is_valid && token && !base->is_contain_args
+		&& base->command->type == ECHO_TYPE)
 	{
 		token = handle_redirection_tokens(base, token);
 		if (token && !ft_strcmp(token->value, "-n"))
@@ -149,12 +151,12 @@ t_token *handle_flag_tokens(t_op *base, t_token *token)
 			token = token->next;
 		}
 		else
-			break;
+			break ;
 	}
-	return token;
+	return (token);
 }
 
-t_token *handle_argument_tokens(t_op *base, t_token *token)
+t_token	*handle_argument_tokens(t_op *base, t_token *token)
 {
 	while (base->is_valid && token && token->type != PIPE)
 	{
@@ -166,22 +168,21 @@ t_token *handle_argument_tokens(t_op *base, t_token *token)
 			token = token->next;
 		}
 		else
-			break;
+			break ;
 	}
-	return token;
+	return (token);
 }
 
-t_op *expand(t_token *token)
+t_op	*expand(t_token *token)
 {
-	t_op *op;
-	t_op *parent;
-	t_op *tmp;
+	t_op	*op;
+	t_op	*parent;
+	t_op	*tmp;
 
 	if (!token)
-		return NULL;
+		return (NULL);
 	op = ft_memalloc(sizeof(t_op));
 	op->is_valid = TRUE;
-
 	token = handle_command_token(op, token);
 	token = handle_flag_tokens(op, token);
 	token = handle_argument_tokens(op, token);
@@ -192,12 +193,12 @@ t_op *expand(t_token *token)
 	{
 		parent = expand(token->next);
 		if (!parent)
-			return op;
+			return (op);
 		tmp = parent;
 		while (tmp->child)
 			tmp = tmp->child;
 		tmp->child = op;
-		return parent;
+		return (parent);
 	}
-	return op;
+	return (op);
 }
