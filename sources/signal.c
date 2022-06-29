@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-//todo не работает прерывание для кейса `cd << ..`
-
 static void	handle_cmd_signal(int sig)
 {
 	if (sig == SIGINT)
@@ -10,6 +8,11 @@ static void	handle_cmd_signal(int sig)
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
+	}
+	if (sig == SIGQUIT)
+	{
+		singleton->last_exit_status = 131;
+		printf("Quit: 3\n");
 	}
 }
 
@@ -28,6 +31,7 @@ static void	handle_global_signal(int sig)
 void	handle_cmd_signals(void)
 {
 	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, handle_cmd_signal);
 	signal(SIGINT, SIG_IGN);
 	signal(SIGINT, handle_cmd_signal);
 }
