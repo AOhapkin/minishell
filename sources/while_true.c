@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char *read_from_input_and_join_with_previous(char *previous_input)
+char	*read_from_input_and_join_with_previous(char *previous_input)
 {
 	char	*input;
 
@@ -12,9 +12,9 @@ char *read_from_input_and_join_with_previous(char *previous_input)
 	return (input);
 }
 
-int is_all_quotes_close(char *input)
+int	is_all_quotes_close(char *input)
 {
-	char quote;
+	char	quote;
 
 	quote = 0;
 	while (*input)
@@ -26,18 +26,18 @@ int is_all_quotes_close(char *input)
 		input++;
 	}
 	if (quote)
-		return FALSE;
+		return (FALSE);
 	else
-		return TRUE;
+		return (TRUE);
 }
 
-char *read_from_input()
+char	*read_from_input(void)
 {
 	char	*input;
 
 	input = readline(PROMPT);
 	if (!input)
-		return input;
+		return (input);
 	while (!is_all_quotes_close(input))
 		input = read_from_input_and_join_with_previous(input);
 	if (isatty(STDIN_FILENO) && input && ft_strlen(input))
@@ -45,7 +45,7 @@ char *read_from_input()
 	return (input);
 }
 
-void free_piped_ops(t_op *parent)
+void	free_piped_ops(t_op *parent)
 {
 	if (parent)
 	{
@@ -54,11 +54,11 @@ void free_piped_ops(t_op *parent)
 	}
 }
 
-void routine(void)
+void	routine(void)
 {
-	char *buffer;
-	t_token *tokens;
-	t_op *parent;
+	char	*buffer;
+	t_token	*tokens;
+	t_op	*parent;
 
 	tokens = NULL;
 	buffer = NULL;
@@ -68,18 +68,17 @@ void routine(void)
 		termios_change(0);
 		buffer = read_from_input();
 		if (!buffer)
-			break;
+			break ;
 		if (ft_strlen(buffer) == 0)
 		{
 			free(buffer);
-			continue;
+			continue ;
 		}
 		tokens = lexer(buffer);
 		parent = expand(tokens);
 		if (parent != NULL && parent->is_valid)
 			interpreter(parent);
 		free_piped_ops(parent);
-//		print_all_tokens(tokens);
 		free_list_of_tokens(tokens);
 		free(buffer);
 	}

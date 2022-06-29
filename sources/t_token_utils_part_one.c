@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-t_token *new_token(char *value)
+t_token	*new_token(char *value)
 {
-	t_token *new;
+	t_token	*new;
 
 	new = ft_memalloc(sizeof(t_token));
 	if (new)
@@ -10,9 +10,9 @@ t_token *new_token(char *value)
 	return (new);
 }
 
-int get_size(t_token *head)
+int	get_size(t_token *head)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (head != NULL)
@@ -23,9 +23,9 @@ int get_size(t_token *head)
 	return (len);
 }
 
-void free_list_of_tokens(t_token *head)
+void	free_list_of_tokens(t_token *head)
 {
-	t_token *temp;
+	t_token	*temp;
 
 	while (head != NULL)
 	{
