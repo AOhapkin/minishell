@@ -12,6 +12,28 @@
 
 #include "minishell.h"
 
+void	update_singleton(int i, int temp_arg)
+{
+	if (i == 0)
+	{
+		g_singleton->last_exit_stat = 0;
+		g_singleton->is_exit = TRUE;
+	}
+	if (i == 1)
+	{
+		if (temp_arg >= 0 && temp_arg <= 255)
+			g_singleton->last_exit_stat = temp_arg;
+		else
+			g_singleton->last_exit_stat = 255;
+		g_singleton->is_exit = TRUE;
+	}
+	if (i > 1)
+	{
+		printf("minishell > exit: too many arguments\n");
+		g_singleton->last_exit_stat = 1;
+	}
+}
+
 void	exit_function(t_op *op)
 {
 	t_token	*arg;
@@ -33,22 +55,5 @@ void	exit_function(t_op *op)
 		i++;
 		arg = arg->next;
 	}
-	if (i == 0)
-	{
-		g_singleton->last_exit_stat = 0;
-		g_singleton->is_exit = TRUE;
-	}
-	if (i == 1)
-	{
-		if (temp_exit_arg >= 0 && temp_exit_arg <= 255)
-			g_singleton->last_exit_stat = temp_exit_arg;
-		else
-			g_singleton->last_exit_stat = 255;
-		g_singleton->is_exit = TRUE;
-	}
-	if (i > 1)
-	{
-		printf("minishell > exit: too many arguments\n");
-		g_singleton->last_exit_stat = 1;
-	}
+	update_singleton(i, temp_exit_arg);
 }
