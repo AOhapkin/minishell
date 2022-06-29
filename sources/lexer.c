@@ -3,9 +3,11 @@
 /**
  * Печатает токены
  */
-void print_all_tokens(t_token *token)
+void	print_all_tokens(t_token *token)
 {
-	t_token *current = token;
+	t_token	*current;
+
+	current = token;
 	while (current)
 	{
 		printf("|%s|\n", current->value);
@@ -17,17 +19,17 @@ void print_all_tokens(t_token *token)
  * TODO узнать подробнее какие бывают ограничения на имена переменных
  * для bash shell
  */
-int is_valid_char_for_env_var_name(char env_var_name_char)
+int	is_valid_char_for_env_var_name(char env_var_name_char)
 {
-	return ft_isalpha(env_var_name_char)
+	return (ft_isalpha(env_var_name_char)
 		|| ft_isdigit(env_var_name_char)
 		|| env_var_name_char == '_'
-		|| env_var_name_char == '?';
+		|| env_var_name_char == '?');
 }
 
-char *join_and_free_srcs(char *s1, char *s2)
+char	*join_and_free_srcs(char *s1, char *s2)
 {
-	char *result;
+	char	*result;
 
 	if (!s1)
 		result = s2;
@@ -39,17 +41,17 @@ char *join_and_free_srcs(char *s1, char *s2)
 		free(s1);
 		free(s2);
 	}
-	return result;
+	return (result);
 }
 
 /**
  * Разделяет буфер на токены
  */
-t_token *lexer(char *buffer)
+t_token	*lexer(char *buffer)
 {
-	t_lexer lexer;
-	int (*p[5])(t_lexer *lexer);
-	size_t i;
+	t_lexer	lexer;
+	int		(*p[5])(t_lexer *lexer);
+	size_t	i;
 
 	lexer_init(&lexer, buffer);
 	p[0] = handle_quotes;
@@ -68,5 +70,5 @@ t_token *lexer(char *buffer)
 	}
 	if (lexer.value)
 		lexer_add_token(&lexer);
-	return lexer.tokens;
+	return (lexer.tokens);
 }
