@@ -1,14 +1,13 @@
 #include <errno.h>
 #include "minishell.h"
 
-void update_pwd()
+void	update_pwd(void)
 {
 	char	current_directory[256];
 	t_list	*pwd_list;
 	t_env	*pwd_env;
-	t_list *old_pwd_list;
-	t_env *old_pwd_env;
-
+	t_list	*old_pwd_list;
+	t_env	*old_pwd_env;
 
 	if (getcwd(current_directory, 256))
 	{
@@ -40,22 +39,22 @@ void update_pwd()
 	}
 }
 
-char *get_home_path()
+char	*get_home_path(void)
 {
-	t_list *env_home;
+	t_list	*env_home;
 	char	*home_path;
 
 	env_home = find_element_by_key(g_singleton->env, "HOME");
 	if (env_home == NULL)
 	{
 		printf("minishell > cd: HOME not set\n");
-		return NULL;
+		return (NULL);
 	}
 	home_path = ((t_env *)env_home->content)->value;
 	return (home_path);
 }
 
-void go_to_oldpwd()
+void	go_to_oldpwd(void)
 {
 	t_list	*env_oldpwd;
 	char	*oldpwd_path;
@@ -94,7 +93,7 @@ void	cd_function(t_op *operation)
 			update_pwd();
 			return ;
 		}
-		if (chdir(path) == 0) // переход в папку
+		if (chdir(path) == 0)
 		{
 			update_pwd();
 			g_singleton->last_exit_status = 0;
