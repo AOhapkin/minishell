@@ -58,7 +58,7 @@ int	is_executable(t_token *token)
 		return (TRUE);
 	else
 	{
-		path_list = find_element_by_key(singleton->env, "PATH");
+		path_list = find_element_by_key(g_singleton->env, "PATH");
 		if (!path_list)
 			return (FALSE);
 		path_env = path_list->content;
@@ -76,7 +76,7 @@ int	is_executable(t_token *token)
 t_token *handle_unexpected_token(t_op *base, t_token *token)
 {
 	printf("minishell : syntax error near unexpected token `%s'\n", token->value);
-	singleton->last_exit_status = 258;
+	g_singleton->last_exit_status = 258;
 	base->is_valid = FALSE;
 	return NULL;
 }
@@ -130,7 +130,7 @@ t_token *handle_command_token(t_op *base, t_token *token)
 	else
 	{
 		printf("minishell : %s: command not found\n", token->value ? token->value : "newline");
-		singleton->last_exit_status = 127;
+		g_singleton->last_exit_status = 127;
 		base->is_valid = FALSE;
 		return NULL;
 	}

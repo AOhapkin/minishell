@@ -46,10 +46,10 @@ void handle_pipes(t_op *parent)
 			run_parent_process(fd, parent);
 		close(fd[0]);
 		close(fd[1]);
-		waitpid(pid1, &(singleton->last_exit_status), 0);
-		singleton->last_exit_status = WEXITSTATUS(singleton->last_exit_status);
-		waitpid(pid2, &(singleton->last_exit_status), 0);
-		singleton->last_exit_status = WEXITSTATUS(singleton->last_exit_status);
+		waitpid(pid1, &(g_singleton->last_exit_status), 0);
+		g_singleton->last_exit_status = WEXITSTATUS(g_singleton->last_exit_status);
+		waitpid(pid2, &(g_singleton->last_exit_status), 0);
+		g_singleton->last_exit_status = WEXITSTATUS(g_singleton->last_exit_status);
 	}
 }
 

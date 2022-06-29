@@ -12,8 +12,8 @@ void update_pwd()
 
 	if (getcwd(current_directory, 256))
 	{
-		pwd_list = find_element_by_key(singleton->env, "PWD");
-		old_pwd_list = find_element_by_key(singleton->env, "OLDPWD");
+		pwd_list = find_element_by_key(g_singleton->env, "PWD");
+		old_pwd_list = find_element_by_key(g_singleton->env, "OLDPWD");
 		if (pwd_list && old_pwd_list)
 		{
 			pwd_env = pwd_list->content;
@@ -45,7 +45,7 @@ char *get_home_path()
 	t_list *env_home;
 	char	*home_path;
 
-	env_home = find_element_by_key(singleton->env, "HOME");
+	env_home = find_element_by_key(g_singleton->env, "HOME");
 	if (env_home == NULL)
 	{
 		printf("minishell > cd: HOME not set\n");
@@ -60,22 +60,22 @@ void go_to_oldpwd()
 	t_list	*env_oldpwd;
 	char	*oldpwd_path;
 
-	env_oldpwd = find_element_by_key(singleton->env, "OLDPWD");
+	env_oldpwd = find_element_by_key(g_singleton->env, "OLDPWD");
 	if (env_oldpwd == NULL)
 	{
 		printf("cd: OLDPWD not set\n");
-		singleton->last_exit_status = 1;
+		g_singleton->last_exit_status = 1;
 		return ;
 	}
 	oldpwd_path = ((t_env *)env_oldpwd->content)->value;
 	if (ft_strlen(oldpwd_path) == 1)
 	{
 		printf("cd: OLDPWD not set\n");
-		singleton->last_exit_status = 1;
+		g_singleton->last_exit_status = 1;
 		return ;
 	}
 	chdir(oldpwd_path);
-	singleton->last_exit_status = 0;
+	g_singleton->last_exit_status = 0;
 }
 
 void	cd_function(t_op *operation)
@@ -97,10 +97,10 @@ void	cd_function(t_op *operation)
 		if (chdir(path) == 0) // переход в папку
 		{
 			update_pwd();
-			singleton->last_exit_status = 0;
+			g_singleton->last_exit_status = 0;
 			return ;
 		}
 		printf("minishell > cd: %s: %s\n", path, strerror(errno));
-		singleton->last_exit_status = 1;
+		g_singleton->last_exit_status = 1;
 	}
 }

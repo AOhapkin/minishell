@@ -4,7 +4,7 @@ void unset_if_contains(char *param)
 {
 	t_list *env_var;
 
-	delete_list_element_by_name(&(singleton->env), param);
+	delete_list_element_by_name(&(g_singleton->env), param);
 }
 
 
@@ -19,5 +19,5 @@ void	unset_function(t_op *op)
 			unset_if_contains(arg->value);
 		arg = arg->next;
 	}
-	singleton->last_exit_status = 0;
+	g_singleton->last_exit_status = 0;
 }

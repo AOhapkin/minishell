@@ -12,11 +12,11 @@ int		ft_strcmp(const char *s1, const char *s2)
 
 void	init_singleton(char **envp)
 {
-	singleton = ft_memalloc(sizeof(t_glob));
-	singleton->env = save_envp_to_list(envp);
-	singleton->envp_chars = envp;
-	singleton->last_exit_status = 1;
-	singleton->is_exit = FALSE;
+	g_singleton = ft_memalloc(sizeof(t_glob));
+	g_singleton->env = save_envp_to_list(envp);
+	g_singleton->envp_chars = envp;
+	g_singleton->last_exit_status = 1;
+	g_singleton->is_exit = FALSE;
 }
 
 void print_real_envp(char **envp)
@@ -41,12 +41,12 @@ int main(int argc, char **argv, char **envp)
 
 	routine();
 	rl_clear_history();
-	return (singleton->last_exit_status);
+	return (g_singleton->last_exit_status);
 }
 
 void singleton_handle_errors()
 {
-	singleton->last_exit_status;
+	g_singleton->last_exit_status;
 }
 
 

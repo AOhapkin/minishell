@@ -62,7 +62,7 @@ void routine(void)
 
 	tokens = NULL;
 	buffer = NULL;
-	while (singleton->is_exit == FALSE)
+	while (g_singleton->is_exit == FALSE)
 	{
 		handle_global_signals();
 		termios_change(0);

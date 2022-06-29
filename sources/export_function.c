@@ -28,12 +28,12 @@ void add_or_update_env_var(char *arg)
 	char **separated;
 
 	separated = ft_split(arg, '=');
-	current = find_element_by_key(singleton->env, separated[0]);
+	current = find_element_by_key(g_singleton->env, separated[0]);
 	if (current == NULL)
 	{
 		new_env = new_env_by_key_value(separated[0], separated[1]);
 		current = ft_lstnew(new_env);
-		ft_lstadd_back(&(singleton->env), current);
+		ft_lstadd_back(&(g_singleton->env), current);
 	}
 	else
 	{
@@ -49,7 +49,7 @@ void	export_function(t_op *op)
 	t_token	*args;
 
 	if (op->is_contain_args == FALSE)
-		print_sorted_list(singleton->env);
+		print_sorted_list(g_singleton->env);
 	else
 	{
 		args = op->command->next;
@@ -65,5 +65,5 @@ void	export_function(t_op *op)
 		}
 //		print_sorted_list(singleton->env); // оставил чтобы можно было проверить добавление
 	}
-	singleton->last_exit_status = 0;
+	g_singleton->last_exit_status = 0;
 }

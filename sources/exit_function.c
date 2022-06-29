@@ -14,8 +14,8 @@ void exit_function(t_op *op)
 			temp_exit_arg = ft_atoi(arg->value);
 		if (i == 0 && !ft_isdigit(*(arg->value)))
 		{
-			singleton->last_exit_status = 2;
-			singleton->is_exit = TRUE;
+			g_singleton->last_exit_status = 2;
+			g_singleton->is_exit = TRUE;
 			return;
 		}
 		i++;
@@ -23,20 +23,20 @@ void exit_function(t_op *op)
 	}
 	if (i == 0)
 	{
-		singleton->last_exit_status = 0;
-		singleton->is_exit = TRUE;
+		g_singleton->last_exit_status = 0;
+		g_singleton->is_exit = TRUE;
 	}
 	if (i == 1)
 	{
 		if (temp_exit_arg >= 0 && temp_exit_arg <= 255)
-			singleton->last_exit_status = temp_exit_arg;
+			g_singleton->last_exit_status = temp_exit_arg;
 		else
-			singleton->last_exit_status = 255;
-		singleton->is_exit = TRUE;
+			g_singleton->last_exit_status = 255;
+		g_singleton->is_exit = TRUE;
 	}
 	if (i > 1)
 	{
 		printf("minishell > exit: too many arguments\n");
-		singleton->last_exit_status = 1;
+		g_singleton->last_exit_status = 1;
 	}
 }

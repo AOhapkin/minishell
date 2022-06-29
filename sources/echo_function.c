@@ -21,5 +21,5 @@ void echo_function(t_op *op)
 	}
 	if (op->is_contain_flag == FALSE)
 		printf("\n");
-	singleton->last_exit_status = 0;
+	g_singleton->last_exit_status = 0;
 }

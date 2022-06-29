@@ -9,8 +9,8 @@ void pwd_function(t_op *op)
 	if (getcwd(buffer, sizeof(char) * 256))
 	{
 		printf("%s\n", buffer);
-		singleton->last_exit_status = 0;
+		g_singleton->last_exit_status = 0;
 	}
 	else
-		singleton->last_exit_status = 1;
+		g_singleton->last_exit_status = 1;
 }

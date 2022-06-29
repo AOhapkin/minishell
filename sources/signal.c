@@ -4,14 +4,14 @@ static void	handle_cmd_signal(int sig)
 {
 	if (sig == SIGINT)
 	{
-		singleton->last_exit_status = 130;
+		g_singleton->last_exit_status = 130;
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
 	}
 	if (sig == SIGQUIT)
 	{
-		singleton->last_exit_status = 131;
+		g_singleton->last_exit_status = 131;
 		printf("Quit: 3\n");
 	}
 }
@@ -20,7 +20,7 @@ static void	handle_global_signal(int sig)
 {
 	if (sig == SIGINT)
 	{
-		singleton->last_exit_status = 1;
+		g_singleton->last_exit_status = 1;
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
