@@ -92,5 +92,4 @@ void	interpreter(t_op *parent)
 		handle_pipes(parent);
 	else
 		no_pipes_execution(parent);
-	singleton_handle_errors();
 }
