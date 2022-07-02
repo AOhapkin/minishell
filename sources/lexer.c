@@ -39,7 +39,7 @@ int	is_valid_char_for_env_var_name(char env_var_name_char)
 		|| env_var_name_char == '?');
 }
 
-char	*join_and_free_srcs(char *s1, char *s2)
+char	*join_and_free(char *s1, char *s2)
 {
 	char	*result;
 

@@ -117,14 +117,13 @@ void	lexer_init(t_lexer *lexer, char *buffer);
 void	lexer_update_value_and_quote(t_lexer *lexer, char quote);
 t_token	*lexer_add_token(t_lexer *lexer);
 void	lexer_add_env_to_value_and_skip_name(t_lexer *lexer);
-// handlers
 int		handle_quotes(t_lexer *lexer);
 int		handle_env_char(t_lexer *lexer);
 int		handle_redirect(t_lexer *lexer);
 int		handle_spaces(t_lexer *lexer);
 int		handle_simple_char(t_lexer *lexer);
 int		is_valid_char_for_env_var_name(char env_var_name_char);
-char	*join_and_free_srcs(char *s1, char *s2);
+char	*join_and_free(char *s1, char *s2);
 
 typedef struct s_base
 {
@@ -151,8 +150,6 @@ int		expand_input_redirection(t_op *base, t_token *token);
 void	print_t_env_array(t_env **array);
 void	sort_t_env_array(t_env **array, int array_size);
 
-// Global struct
-
 typedef struct s_glob
 {
 	t_list	*env;
@@ -165,13 +162,11 @@ t_glob	*g_singleton;
 
 t_list	*save_envp_to_list(char **envp);
 t_list	*find_element_by_key(t_list *list, char *key);
-void	print_list_element_content(void *content);
-void	print_list(t_list *list);
 void	delete_list_element_by_name(t_list **list, const char *param_name);
 t_env	**list_to_array(t_list *list);
 void	print_sorted_list(t_list *list_head);
-
 int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strncpy(char *dst, const char *src, size_t len);
 void	export_function(t_op *op);
 void	env_function(t_op *op);
 void	unset_function(t_op *op);
@@ -179,20 +174,25 @@ void	pwd_function(t_op *op);
 void	exec_function(t_op *op);
 void	cd_function(t_op *operation);
 void	exit_function(t_op *op);
-
 void	handle_child_redirections(int fd[2], t_op *op);
 void	handle_parent_redirections(int fd[2], t_op *op);
 void	handle_single_redirection(t_op *op);
-void	singleton_handle_errors(void);
-//void	set_err_code(int err_code);
-//int		get_err_code(void);
-
-void	handle_ctrl_c_signal(int signal);
-void	signal_ctlc_heredoc(int sig);
 int		termios_change(int echo_ctl_chr);
 void	handle_cmd_signals(void);
 void	handle_global_signals(void);
 void	handle_redir_signals(void);
-void set_new_exit(int new_exit_code);
+void	set_new_exit(int new_exit_code);
+void	no_pipes_execution(t_op *op);
+void	update_pwd(void);
+t_token	*handle_argument_tokens(t_op *base, t_token *token);
+t_token	*handle_flag_tokens(t_op *base, t_token *token);
+int		is_executable(t_token *token);
+t_token	*handle_command_token(t_op *base, t_token *token);
+t_token	*handle_redirection_tokens(t_op *base, t_token *token);
+void	handle_here_documents(int prev_fd[2], t_op *parent);
+void	handle_input_from_file(int fd[2], t_op *op);
+void	handle_output_to_file(int fd[2], t_op *op);
+void	handle_input_from_file_single(t_op *op);
+void	handle_output_to_file_single(t_op *op);
 
 #endif

@@ -12,6 +12,24 @@
 
 #include "minishell.h"
 
+char	*ft_strncpy(char *dst, const char *src, size_t len)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < len && src[i] != '\0')
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	while (i < len)
+	{
+		dst[i] = '\0';
+		i++;
+	}
+	return (dst);
+}
+
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	while (*s1 == *s2 && *s1 != '\0' && *s2 != '\0')

@@ -12,15 +12,6 @@
 
 #include "minishell.h"
 
-t_token	*handle_redirection_tokens(t_op *base, t_token *token)
-{
-	while (base->is_valid && token
-		&& (expand_input_redirection(base, token) == NOT_SKIP
-			|| expand_output_redirection(base, token) == NOT_SKIP))
-		token = token->next->next;
-	return (token);
-}
-
 void	free_paths_array(char **paths)
 {
 	char	**tmp;
@@ -94,97 +85,6 @@ t_token	*handle_unexpected_token(t_op *base, t_token *token)
 	return (NULL);
 }
 
-t_token	*handle_command_token(t_op *base, t_token *token)
-{
-	token = handle_redirection_tokens(base, token);
-	base->command = token;
-	if (token->type == PIPE)
-		return (handle_unexpected_token(base, token));
-	if (token && !strcmp(token->value, "echo"))
-	{
-		token->type = ECHO_TYPE;
-		base->function = echo_function;
-	}
-	else if (token && !strcmp(token->value, "export"))
-	{
-		token->type = EXPORT_TYPE;
-		base->function = export_function;
-	}
-	else if (token && !strcmp(token->value, "cd"))
-	{
-		token->type = CD_TYPE;
-		base->function = cd_function;
-	}
-	else if (token && !strcmp(token->value, "env"))
-	{
-		token->type = ENV_TYPE;
-		base->function = env_function;
-	}
-	else if (token && !strcmp(token->value, "unset"))
-	{
-		token->type = UNSET_TYPE;
-		base->function = unset_function;
-	}
-	else if (token && !strcmp(token->value, "pwd"))
-	{
-		token->type = PWD_TYPE;
-		base->function = pwd_function;
-	}
-	else if (token && !strcmp(token->value, "exit"))
-	{
-		token->type = EXIT_TYPE;
-		base->function = exit_function;
-	}
-	else if (token && is_executable(token))
-	{
-		token->type = EXEC_TYPE;
-		base->function = exec_function;
-	}
-	else
-	{
-		printf("minishell : %s: command not found\n", token->value ? token->value : "newline");
-		g_singleton->last_exit_stat = 127;
-		base->is_valid = FALSE;
-		return (NULL);
-	}
-	return (token->next);
-}
-
-t_token	*handle_flag_tokens(t_op *base, t_token *token)
-{
-	while (base->is_valid && token && !base->is_contain_args
-		&& base->command->type == ECHO_TYPE)
-	{
-		token = handle_redirection_tokens(base, token);
-		if (token && !ft_strcmp(token->value, "-n"))
-		{
-			token->type = ECHO_N_FLAG;
-			base->is_contain_flag = TRUE;
-			token = token->next;
-		}
-		else
-			break ;
-	}
-	return (token);
-}
-
-t_token	*handle_argument_tokens(t_op *base, t_token *token)
-{
-	while (base->is_valid && token && token->type != PIPE)
-	{
-		token = handle_redirection_tokens(base, token);
-		if (token && token->type != PIPE)
-		{
-			token->type = COMMAND_ARG_TYPE;
-			base->is_contain_args = TRUE;
-			token = token->next;
-		}
-		else
-			break ;
-	}
-	return (token);
-}
-
 t_op	*expand(t_token *token)
 {
 	t_op	*op;
@@ -198,10 +98,7 @@ t_op	*expand(t_token *token)
 	token = handle_command_token(op, token);
 	token = handle_flag_tokens(op, token);
 	token = handle_argument_tokens(op, token);
-	if (op->is_valid == TRUE
-		&& token
-		&& token->type == PIPE
-		&& token->next)
+	if (op->is_valid == TRUE && token && token->type == PIPE && token->next)
 	{
 		parent = expand(token->next);
 		if (!parent)

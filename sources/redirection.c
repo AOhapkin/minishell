@@ -30,9 +30,6 @@ int	expand_output_redirection(t_op *base, t_token *token)
 		arg = token->next;
 		if (!arg || arg->type == PIPE || is_redirection_type(arg->type))
 		{
-//			base->is_valid = FALSE;
-//			printf("minishell : syntax error near unexpected token `%s'\n", arg ? arg->value : "newline");
-//			singleton->last_exit_status = 258;
 			handle_unexpected_token(base, token);
 			return (SKIP);
 		}
@@ -43,28 +40,6 @@ int	expand_output_redirection(t_op *base, t_token *token)
 	return (SKIP);
 }
 
-//void	update_argument_token(t_op *base, t_token *arg)
-//{
-//	char	*input;
-//	char	*result;
-//
-//	result = readline(">");
-//	input = result;
-//	while (input && ft_strcmp(input, arg->value))
-//	{
-//		if (input != result)
-//		{
-//			result = join_and_free_srcs(result, ft_strdup("\n"));
-//			result = join_and_free_srcs(result, input);
-//		}
-//		input = readline(">");
-//	}
-//	if (input)
-//		free(input);
-//	free(arg->value);
-//	arg->value = result;
-//}
-
 int	expand_input_redirection(t_op *base, t_token *token)
 {
 	t_token	*arg;
@@ -73,13 +48,7 @@ int	expand_input_redirection(t_op *base, t_token *token)
 	{
 		arg = token->next;
 		if (!arg || arg->type == PIPE || is_redirection_type(arg->type))
-		{
-			// это нужно?
-//			handle_unexpected_token;
 			return (SKIP);
-		}
-//		if (token->type == HERE_DOCUMENTS)
-//			update_argument_token(base, arg);
 		base->input = token;
 		arg->type = REDIRECT_ARG_TYPE;
 		return (NOT_SKIP);

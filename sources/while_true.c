@@ -17,8 +17,8 @@ char	*read_from_input_and_join_with_previous(char *previous_input)
 	char	*input;
 
 	input = readline(">");
-	previous_input = join_and_free_srcs(previous_input, ft_strdup("\n"));
-	input = join_and_free_srcs(previous_input, input);
+	previous_input = join_and_free(previous_input, ft_strdup("\n"));
+	input = join_and_free(previous_input, input);
 	if (isatty(STDIN_FILENO) && input)
 		add_history(input);
 	return (input);

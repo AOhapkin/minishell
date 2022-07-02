@@ -63,22 +63,30 @@ add_executable(minishell
         sources/t_token_utils_part_one.c
         sources/t_token_utils_part_two.c
         sources/lexer.c
-        sources/lexer_handlers.c
-        sources/expander.c
+        sources/lexer_handlers_pt_one.c
+        sources/lexer_handlers_pt_two.c
+        sources/expander_pt_one.c
+        sources/expander_pt_two.c
+        sources/expander_pt_three.c
         sources/echo_function.c
         sources/t_lexer_utils.c
         sources/redirection.c
         sources/interpreter.c
         sources/main.c
-        sources/t_list_utils.c
+        sources/t_list_utils_pt_two.c
+        sources/t_list_utils_pt_one.c
         sources/array_utils.c
         sources/t_env_util.c
         sources/export_function.c
-        sources/cd_function.c
+        sources/cd_function_pt_one.c
+        sources/cd_function_pt_two.c
         sources/unset_function.c
         sources/pwd_function.c
         sources/env_function.c
         sources/exit_function.c
-        sources/redirections_handler.c
+        sources/redirections_handler_pt_one.c
+        sources/redirections_handler_pt_two.c
+        sources/redirections_handler_pt_three.c
         sources/exec_function.c
-        sources/signal.c)
+        sources/signal_pt_one.c
+        sources/signal_pt_two.c)
