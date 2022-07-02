@@ -31,7 +31,6 @@
 # define FALSE 0
 
 # define DOUBLE_QUOTE '\"'
-# define SINGLE_QUOTE '\''
 # define QUOTES "\'\""
 # define REDIRECTIONS_CHARS "<>|"
 # define ENV_CHAR '$'
@@ -53,7 +52,6 @@
 # define UNSET_TYPE 6
 # define CD_TYPE 7
 # define PWD_TYPE 8
-# define NUM_OF_COMMANDS 8
 
 /**
  * Flags
@@ -97,11 +95,7 @@ t_token	*new_token(char *first_char);
 int		get_size(t_token *head);
 void	free_list_of_tokens(t_token *head);
 t_token	*get_last_token(t_token *head);
-t_token	*pull_first_token(t_token **stack);
 void	push_token_back(t_token **stack, t_token *token);
-void	push_token_front(t_token **stack, t_token *token);
-int		get_position_in_the_stack(t_token *stack, t_token *token);
-void	print_all_tokens(t_token *token);
 
 typedef struct s_lexer
 {
