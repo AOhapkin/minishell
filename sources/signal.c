@@ -12,6 +12,20 @@
 
 #include "minishell.h"
 
+static void	handle_redir_signal(int sig)
+{
+	if (sig == SIGINT)
+	{
+		g_singleton->last_exit_stat = 1;
+		rl_replace_line(NULL, 0);
+	}
+	if (sig == SIGQUIT)
+	{
+		g_singleton->last_exit_stat = 131;
+		printf("Quit: 3\n");
+	}
+}
+
 static void	handle_cmd_signal(int sig)
 {
 	if (sig == SIGINT)
@@ -46,6 +60,12 @@ void	handle_cmd_signals(void)
 	signal(SIGQUIT, handle_cmd_signal);
 	signal(SIGINT, SIG_IGN);
 	signal(SIGINT, handle_cmd_signal);
+}
+
+void	handle_redir_signals(void)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGINT, handle_redir_signal);
 }
 
 void	handle_global_signals(void)

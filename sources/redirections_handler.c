@@ -18,6 +18,7 @@ void	read_write_heredoc(int fd[2], char *stop_word)
 	char	*result;
 
 	result = NULL;
+	handle_redir_signals();
 	input = readline(">");
 	while (input && ft_strcmp(input, stop_word))
 	{
@@ -40,7 +41,7 @@ void	read_write_heredoc(int fd[2], char *stop_word)
 		}
 		free(input);
 	}
-	exit(0);
+	exit(g_singleton->last_exit_stat);
 }
 //void 	read_write_heredoc(int fd[2], char *stop_word)
 //{
@@ -69,20 +70,12 @@ void	handle_here_documents(int prev_fd[2], t_op *parent)
 		close(prev_fd[0]);
 	if (pipe(fd) == 0)
 	{
-//		handle_cmd_signals();
 		pid = fork();
-		if (prev_fd)
-			prev_fd[0] = fd[0];
 		if (pid == 0)
 			read_write_heredoc(fd, parent->input->next->value);
 		close(fd[1]);
 		waitpid(pid, &tmp, 0);
-
-		if (prev_fd && tmp != 0)
-		{
-			close(prev_fd[0]);
-			close(prev_fd[1]);
-		}
+		set_new_exit(tmp);
 	}
 }
 
@@ -124,7 +117,10 @@ void	handle_output_to_file(int fd[2], t_op *op)
 void	handle_child_redirections(int fd[2], t_op *op)
 {
 	if (op->input && op->input->type == HERE_DOCUMENTS)
+	{
 		handle_here_documents(fd, op);
+		dup2(fd[0], 0);
+	}
 	else if (op->input && op->input->type == REDIRECT_INPUT)
 	{
 		handle_input_from_file(fd, op);
@@ -140,7 +136,10 @@ void	handle_parent_redirections(int fd[2], t_op *op)
 	int	tmp;
 
 	if (op->input && op->input->type == HERE_DOCUMENTS)
+	{
 		handle_here_documents(fd, op);
+		dup2(fd[0], 0);
+	}
 	else
 	{
 		tmp = fd[0];
@@ -187,8 +186,12 @@ void	handle_output_to_file_single(t_op *op)
 
 void	handle_single_redirection(t_op *op)
 {
+
+	handle_cmd_signals();
 	if (op->input && op->input->type == HERE_DOCUMENTS)
+	{
 		handle_here_documents(NULL, op);
+	}
 	else if (op->input)
 		handle_input_from_file_single(op);
 	if (op->output)

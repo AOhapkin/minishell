@@ -47,13 +47,15 @@ char	*read_from_input(void)
 {
 	char	*input;
 
+	termios_change(0);
 	input = readline(PROMPT);
 	if (!input)
 		return (input);
-	while (!is_all_quotes_close(input))
+	while (input && !is_all_quotes_close(input))
 		input = read_from_input_and_join_with_previous(input);
 	if (isatty(STDIN_FILENO) && input && ft_strlen(input))
 		add_history(input);
+	termios_change(1);
 	return (input);
 }
 
@@ -77,7 +79,6 @@ void	routine(void)
 	while (g_singleton->is_exit == FALSE)
 	{
 		handle_global_signals();
-		termios_change(0);
 		buffer = read_from_input();
 		if (!buffer)
 			break ;

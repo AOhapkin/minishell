@@ -192,5 +192,7 @@ void	signal_ctlc_heredoc(int sig);
 int		termios_change(int echo_ctl_chr);
 void	handle_cmd_signals(void);
 void	handle_global_signals(void);
+void	handle_redir_signals(void);
+void set_new_exit(int new_exit_code);
 
 #endif

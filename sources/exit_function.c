@@ -29,7 +29,7 @@ void	update_singleton(int i, int temp_arg)
 	}
 	if (i > 1)
 	{
-		printf("minishell > exit: too many arguments\n");
+		printf("logout\nminishell: exit: too many arguments\n");
 		g_singleton->last_exit_stat = 1;
 	}
 }
