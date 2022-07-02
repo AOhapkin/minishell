@@ -12,18 +12,78 @@
 
 #include "minishell.h"
 
-void	handle_here_documents(t_op *op)
+void	read_write_heredoc(int fd[2], char *stop_word)
 {
-	int		input_pipe_fd[2];
-	char	*input_buff;
+	char	*input;
+	char	*result;
 
-	pipe(input_pipe_fd);
-	input_buff = op->input->next->value;
-	dup2(input_pipe_fd[0], 0);
-	write(input_pipe_fd[1], input_buff, ft_strlen(input_buff));
-	write(input_pipe_fd[1], "\n", 1);
-	close(input_pipe_fd[0]);
-	close(input_pipe_fd[1]);
+	result = NULL;
+	input = readline(">");
+	while (input && ft_strcmp(input, stop_word))
+	{
+		if (result)
+		{
+			result = join_and_free_srcs(result, ft_strdup("\n"));
+			result = join_and_free_srcs(result, input);
+		}
+		else
+			result = input;
+		input = readline(">");
+	}
+	if (input)
+	{
+		if (result)
+		{
+			write(fd[1], result, ft_strlen(result));
+			write(fd[1], "\n", 1);
+			free(result);
+		}
+		free(input);
+	}
+	exit(0);
+}
+//void 	read_write_heredoc(int fd[2], char *stop_word)
+//{
+//	char	*input;
+//
+//	input = readline(">");
+//	while (input && ft_strcmp(input, stop_word))
+//	{
+//		write(fd[1], input, ft_strlen(input));
+//		write(fd[1], "\n", 1);
+//		free(input);
+//		input = readline(">");
+//	}
+//	if (input)
+//		free(input);
+//	exit(0);
+//}
+
+void	handle_here_documents(int prev_fd[2], t_op *parent)
+{
+	int		fd[2];
+	pid_t	pid;
+	int 	tmp;
+
+	if (prev_fd && prev_fd[0] != STDIN_FILENO)
+		close(prev_fd[0]);
+	if (pipe(fd) == 0)
+	{
+//		handle_cmd_signals();
+		pid = fork();
+		if (prev_fd)
+			prev_fd[0] = fd[0];
+		if (pid == 0)
+			read_write_heredoc(fd, parent->input->next->value);
+		close(fd[1]);
+		waitpid(pid, &tmp, 0);
+
+		if (prev_fd && tmp != 0)
+		{
+			close(prev_fd[0]);
+			close(prev_fd[1]);
+		}
+	}
 }
 
 void	handle_input_from_file(int fd[2], t_op *op)
@@ -64,7 +124,7 @@ void	handle_output_to_file(int fd[2], t_op *op)
 void	handle_child_redirections(int fd[2], t_op *op)
 {
 	if (op->input && op->input->type == HERE_DOCUMENTS)
-		handle_here_documents(op);
+		handle_here_documents(fd, op);
 	else if (op->input && op->input->type == REDIRECT_INPUT)
 	{
 		handle_input_from_file(fd, op);
@@ -80,7 +140,7 @@ void	handle_parent_redirections(int fd[2], t_op *op)
 	int	tmp;
 
 	if (op->input && op->input->type == HERE_DOCUMENTS)
-		handle_here_documents(op);
+		handle_here_documents(fd, op);
 	else
 	{
 		tmp = fd[0];
@@ -128,7 +188,7 @@ void	handle_output_to_file_single(t_op *op)
 void	handle_single_redirection(t_op *op)
 {
 	if (op->input && op->input->type == HERE_DOCUMENTS)
-		handle_here_documents(op);
+		handle_here_documents(NULL, op);
 	else if (op->input)
 		handle_input_from_file_single(op);
 	if (op->output)

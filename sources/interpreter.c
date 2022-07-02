@@ -45,10 +45,11 @@ void	handle_pipes(t_op *parent)
 	int		fd[2];
 	pid_t	pid1;
 	pid_t	pid2;
+	int 	tmp;
 
 	if (pipe(fd) == 0)
 	{
-		handle_cmd_signals();
+//		handle_cmd_signals();
 		pid1 = fork();
 		if (pid1 == 0)
 			run_child_process(fd, parent->child);
@@ -57,10 +58,12 @@ void	handle_pipes(t_op *parent)
 			run_parent_process(fd, parent);
 		close(fd[0]);
 		close(fd[1]);
-		waitpid(pid1, &(g_singleton->last_exit_stat), 0);
-		g_singleton->last_exit_stat = WEXITSTATUS(g_singleton->last_exit_stat);
-		waitpid(pid2, &(g_singleton->last_exit_stat), 0);
-		g_singleton->last_exit_stat = WEXITSTATUS(g_singleton->last_exit_stat);
+		waitpid(pid1, &tmp, 0);
+		if (g_singleton->last_exit_stat == 0)
+			g_singleton->last_exit_stat = WEXITSTATUS(tmp);
+		waitpid(pid2, &tmp, 0);
+		if (!g_singleton->last_exit_stat)
+			g_singleton->last_exit_stat = WEXITSTATUS(tmp);
 	}
 }
 
@@ -88,6 +91,7 @@ void	no_pipes_execution(t_op *op)
 
 void	interpreter(t_op *parent)
 {
+	g_singleton->last_exit_stat = 0;
 	if (parent->child)
 		handle_pipes(parent);
 	else
