@@ -1,41 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gmyriah <gmyriah@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/19 12:37:11 by gmyriah           #+#    #+#             */
-/*   Updated: 2022/07/03 08:45:33 by gmyriah          ###   ########.fr       */
+/*   Created: 2022/06/29 21:43:43 by gmyriah           #+#    #+#             */
+/*   Updated: 2022/06/29 21:43:44 by gmyriah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	*ft_memmove(void *dest, const void *src, size_t len)
+t_token	*handle_argument_tokens(t_op *base, t_token *token)
 {
-	unsigned char		*d;
-	const unsigned char	*s;
-
-	d = (unsigned char *)dest;
-	s = (unsigned char *)src;
-	if (s < d)
+	while (base->is_valid && token && token->type != PIPE)
 	{
-		s += len - 1;
-		d += len - 1;
-		while (len > 0)
+		token = handle_redirection_tokens(base, token);
+		if (token && token->type != PIPE)
 		{
-			*d-- = *s--;
-			len--;
+			token->type = COMMAND_ARG_TYPE;
+			base->is_contain_args = TRUE;
+			token = token->next;
 		}
+		else
+			break ;
 	}
-	else
-	{
-		while (len > 0)
-		{
-			*d++ = *s++;
-			len--;
-		}
-	}
-	return (dest);
+	return (token);
 }

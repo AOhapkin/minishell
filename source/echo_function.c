@@ -1,41 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   echo_function.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gmyriah <gmyriah@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/19 12:37:11 by gmyriah           #+#    #+#             */
-/*   Updated: 2022/07/03 08:45:33 by gmyriah          ###   ########.fr       */
+/*   Created: 2022/06/29 21:43:22 by gmyriah           #+#    #+#             */
+/*   Updated: 2022/06/29 21:43:23 by gmyriah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	*ft_memmove(void *dest, const void *src, size_t len)
+void	echo_function(t_op *op)
 {
-	unsigned char		*d;
-	const unsigned char	*s;
+	t_token	*arg;
+	int		is_first;
 
-	d = (unsigned char *)dest;
-	s = (unsigned char *)src;
-	if (s < d)
+	arg = op->command->next;
+	is_first = TRUE;
+	while (arg && arg->type != PIPE)
 	{
-		s += len - 1;
-		d += len - 1;
-		while (len > 0)
+		if (arg->type == COMMAND_ARG_TYPE)
 		{
-			*d-- = *s--;
-			len--;
+			if (is_first)
+				is_first = FALSE;
+			else
+				printf(" ");
+			printf("%s", arg->value);
 		}
+		arg = arg->next;
 	}
-	else
-	{
-		while (len > 0)
-		{
-			*d++ = *s++;
-			len--;
-		}
-	}
-	return (dest);
+	if (op->is_contain_flag == FALSE)
+		printf("\n");
+	g_singleton->last_exit_stat = 0;
 }

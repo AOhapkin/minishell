@@ -1,41 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   unset_function.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gmyriah <gmyriah@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/19 12:37:11 by gmyriah           #+#    #+#             */
-/*   Updated: 2022/07/03 08:45:33 by gmyriah          ###   ########.fr       */
+/*   Created: 2022/06/29 21:44:29 by gmyriah           #+#    #+#             */
+/*   Updated: 2022/06/29 21:44:30 by gmyriah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	*ft_memmove(void *dest, const void *src, size_t len)
+void	unset_if_contains(char *param)
 {
-	unsigned char		*d;
-	const unsigned char	*s;
+	delete_list_element_by_name(&(g_singleton->env), param);
+}
 
-	d = (unsigned char *)dest;
-	s = (unsigned char *)src;
-	if (s < d)
+void	unset_function(t_op *op)
+{
+	t_token	*arg;
+
+	arg = op->command->next;
+	while (arg)
 	{
-		s += len - 1;
-		d += len - 1;
-		while (len > 0)
-		{
-			*d-- = *s--;
-			len--;
-		}
+		if (arg->type == COMMAND_ARG_TYPE)
+			unset_if_contains(arg->value);
+		arg = arg->next;
 	}
-	else
-	{
-		while (len > 0)
-		{
-			*d++ = *s++;
-			len--;
-		}
-	}
-	return (dest);
+	g_singleton->last_exit_stat = 0;
 }
