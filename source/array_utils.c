@@ -40,9 +40,6 @@ void	sort_t_env_array(t_env **array, int array_size)
 
 void	print_name_and_value(t_env *env_var)
 {
-	char	*name;
-	char	*value;
-
 	printf("%s", env_var->key);
 	if (env_var->value)
 	{

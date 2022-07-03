@@ -23,13 +23,13 @@ t_token	*handle_redirection_tokens(t_op *base, t_token *token)
 
 int	commands_pt_two(t_op *base, t_token *token)
 {
-	if (token && !strcmp(token->value, "pwd"))
+	if (token && !ft_strcmp(token->value, "pwd"))
 	{
 		token->type = PWD_TYPE;
 		base->function = pwd_function;
 		return (TRUE);
 	}
-	else if (token && !strcmp(token->value, "exit"))
+	else if (token && !ft_strcmp(token->value, "exit"))
 	{
 		token->type = EXIT_TYPE;
 		base->function = exit_function;
@@ -41,7 +41,7 @@ int	commands_pt_two(t_op *base, t_token *token)
 		base->function = exec_function;
 		return (TRUE);
 	}
-	else if (token && !strcmp(token->value, "unset"))
+	else if (token && !ft_strcmp(token->value, "unset"))
 	{
 		token->type = UNSET_TYPE;
 		base->function = unset_function;
@@ -52,25 +52,25 @@ int	commands_pt_two(t_op *base, t_token *token)
 
 int	commands_pt_one(t_op *base, t_token *token)
 {
-	if (token && !strcmp(token->value, "echo"))
+	if (token && !ft_strcmp(token->value, "echo"))
 	{
 		token->type = ECHO_TYPE;
 		base->function = echo_function;
 		return (TRUE);
 	}
-	else if (token && !strcmp(token->value, "export"))
+	else if (token && !ft_strcmp(token->value, "export"))
 	{
 		token->type = EXPORT_TYPE;
 		base->function = export_function;
 		return (TRUE);
 	}
-	else if (token && !strcmp(token->value, "cd"))
+	else if (token && !ft_strcmp(token->value, "cd"))
 	{
 		token->type = CD_TYPE;
 		base->function = cd_function;
 		return (TRUE);
 	}
-	else if (token && !strcmp(token->value, "env"))
+	else if (token && !ft_strcmp(token->value, "env"))
 	{
 		token->type = ENV_TYPE;
 		base->function = env_function;

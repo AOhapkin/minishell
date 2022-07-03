@@ -51,8 +51,12 @@ void	init_singleton(char **envp)
 
 int	main(int argc, char **argv, char **envp)
 {
-	init_singleton(envp);
-	routine();
-	rl_clear_history();
-	return (g_singleton->last_exit_stat);
+	if (argc == 1 && argv)
+	{
+		init_singleton(envp);
+		routine();
+		rl_clear_history();
+		return (g_singleton->last_exit_stat);
+	}
+	exit (1);
 }

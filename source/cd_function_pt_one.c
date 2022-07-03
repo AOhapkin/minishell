@@ -45,6 +45,8 @@ void	update_pwd(void)
 	t_list	*oldpwd_list;
 	t_env	*oldpwd_env;
 
+	pwd_env = NULL;
+	oldpwd_env = NULL;
 	if (getcwd(current_directory, 256))
 	{
 		pwd_list = find_element_by_key(g_singleton->env, "PWD");

@@ -15,7 +15,7 @@
 int	handle_quotes(t_lexer *lexer)
 {
 	if ((!lexer->quote && ft_strchr(QUOTES, *lexer->buffer))
-		|| lexer->quote && *lexer->buffer == lexer->quote)
+		|| (lexer->quote && *lexer->buffer == lexer->quote))
 	{
 		if (lexer->quote && *lexer->buffer == lexer->quote)
 			lexer_update_value_and_quote(lexer, 0);

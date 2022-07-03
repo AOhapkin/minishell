@@ -1,26 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_function.c                                     :+:      :+:    :+:   */
+/*   unset_function.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gmyriah <gmyriah@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/29 21:43:25 by gmyriah           #+#    #+#             */
-/*   Updated: 2022/06/29 21:43:26 by gmyriah          ###   ########.fr       */
+/*   Created: 2022/06/29 21:44:29 by gmyriah           #+#    #+#             */
+/*   Updated: 2022/06/29 21:44:30 by gmyriah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	env_function(t_op *op)
+void	unset_if_contains(char *param)
 {
-	t_list	*current;
+	delete_list_element_by_name(&(g_singleton->env), param);
+}
 
-	current = g_singleton->env;
-	while (current)
+void	unset_function(t_op *op)
+{
+	t_token	*arg;
+
+	arg = op->command->next;
+	while (arg)
 	{
-		print_env(current->content);
-		current = current->next;
+		if (arg->type == COMMAND_ARG_TYPE)
+			unset_if_contains(arg->value);
+		arg = arg->next;
 	}
 	g_singleton->last_exit_stat = 0;
 }
